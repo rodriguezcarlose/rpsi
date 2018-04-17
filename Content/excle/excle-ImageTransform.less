@@ -1,0 +1,227 @@
+﻿.EcImageTransformation {
+    background: transparent;
+    position: absolute;
+
+    .transformable-handle-rotate {
+        box-sizing: border-box;
+        background-image: url(Images/rotate-24.png) !important;
+        background-position: -1px -1px;
+        width: 26px;
+        height: 26px;
+        border-radius: 26px;
+        border: 2px solid white;
+    }
+
+    .transformable-handle-scale {
+        box-sizing: border-box;
+        background-image: url(Images/zoom-24.png) !important;
+        background-position: -1px -1px;
+        width: 26px;
+        height: 26px;
+        border-radius: 26px;
+        border: 2px solid white;
+    }
+
+    h4 {
+        background-color: #008cba;
+        color: white;
+        font-size: 12px;
+        padding: 5px;
+        padding-left: 32px;
+        margin: 0;
+        height: 28px;
+        box-sizing: border-box;
+        line-height: 1.8;
+        font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+
+        .btnRotate {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+        }
+
+        .btnZoom {
+            position: absolute;
+            right: 30px;
+            top: 5px;
+        }
+    }
+
+    &.ImageTransform {
+        //background-color: white;
+        &.loading {
+            background-color: #fdfdfd;
+            background-image: url('images/Spinner.gif');
+            min-height: 400px;
+            min-width: 400px;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        img {
+            margin: 0 auto;
+            max-width: initial;
+        }
+    }
+
+    .poiWrapper{
+        position:relative;
+    }
+
+    &.selected {
+        h4 {
+            font-weight: bold;
+            background-color: #00698c;
+        }
+    }
+}
+
+.objPOI {
+    background-color: red;
+    width: 7px;
+    height: 7px;
+    position: relative;
+    top: -3px;
+    left: -3px;
+    border-radius: 15px;
+
+    &.poiColor1 {
+        background-color: #ff0000;
+    }
+
+    &.poiColor2 {
+        background-color: #f5ff00;
+    }
+
+    &.poiColor3 {
+        background-color: #78ff00;
+    }
+
+    &.poiColor4 {
+        background-color: #ffa200;
+    }
+
+    &.poiColor5 {
+        background-color: #00ea62;
+    }
+
+    &.poiColor6 {
+        background-color: #00ffff;
+    }
+
+    &.poiColor7 {
+        background-color: #0072ff;
+    }
+
+    &.poiColor8 {
+        background-color: #007095;
+    }
+
+    &.poiColor9 {
+        background-color: #b600ff;
+    }
+
+    &.poiColor10 {
+        background-color: #ff008d;
+    }
+}
+
+.viewPort {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.lightbox {
+    border: none !important;
+    height: 100% !important;
+    margin: 0 !important;
+    position: absolute !important;
+    width: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+.FingerViewer {
+    &.fullscreen {
+        position: fixed;
+        top: 35px;
+        left: 0;
+        width: 100%;
+        z-index: 100000000;
+        height: 100%;
+        background: white;
+        padding-right: 0;
+
+        .viewPort {
+            width: 100% !important;
+            height: 100% !important;
+            border: none;
+            margin: 0;
+        }
+
+        #EditorPanel {
+            margin-bottom: 0;
+        }
+    }
+
+    padding-right: 250px;
+}
+
+.Lightbox {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    //display:none;
+    .LightboxBg {
+        width: 100% !important;
+        height: 100% !important;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: black;
+        opacity: 0.85;
+    }
+
+    .LightboxButton {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        top: 5px;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &.LightboxMenu {
+            right: 5px;
+            background-image: url(images/menu-lightbox.png);
+        }
+
+        &.LightboxClose {
+            right: 5px;
+            background-image: url(images/close-lightbox.png);
+        }
+
+        &.LightboxDownload {
+            right: 37px;
+            background-image: url(images/download-32.png);
+        }
+
+        &.LightboxReset {
+            right: 74px;
+            background-image: url(images/reset-32.png);
+        }
+    }
+
+    &.hide {
+        display: none;
+    }
+}

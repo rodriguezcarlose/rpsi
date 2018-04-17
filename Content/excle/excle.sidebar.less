@@ -1,0 +1,465 @@
+﻿@menu-color-base: rgb(25, 25, 25);
+@menu-color-hover: rgba(150,150,150,1);
+@menu-color-text: rgb(240, 240, 240);
+@menu-color-text-active: rgba(0,140,186,1);
+@menu-width-close: 45px;
+@menu-des-size: 0.2rem;
+
+@menu-icon-scale: 50; // porcentaje respecto al ancho del menu cerrado
+@menu-icon-size: ((@menu-width-close / 100) * @menu-icon-scale);
+@force-img-size: true; // ajusta el tamañano de las imagenes (<img />)
+@menu-icon-pdding: ( (@menu-width-close - @menu-icon-size) / 2 );
+
+.menu-img-size() when (@force-img-size = true) {
+    & {
+        width:  round(@menu-icon-size);
+        height: round(@menu-icon-size);
+    }
+}
+
+@-moz-keyframes openMenu {
+  0% {
+    width:@menu-width-close*3;
+  }
+  100% {
+    width: @menu-width-close*6.5;
+  }
+}
+@-webkit-keyframes openMenu {
+  0% {
+    width:@menu-width-close*3;
+  }
+  100% {
+    width: @menu-width-close*6.5;
+  }
+}
+@-o-keyframes openMenu {
+  0% {
+    width:@menu-width-close*3;
+  }
+  100% {
+    width: @menu-width-close*6.5;
+  }
+}
+@keyframes openMenu {
+  0% {
+    width:@menu-width-close*1.5;
+  }
+  100% {
+    width: @menu-width-close*6.5;
+  }
+}
+
+@-moz-keyframes closeMenu {
+  0% {
+    width:@menu-width-close*6.5;
+  }
+  100% {
+    width: @menu-width-close;
+  }
+}
+@-webkit-keyframes closeMenu {
+  0% {
+    width:@menu-width-close*6.5;
+  }
+  100% {
+    width: @menu-width-close;
+  }
+}
+@-o-keyframes closeMenu {
+  0% {
+    width:@menu-width-close*6.5;
+  }
+  100% {
+    width: @menu-width-close;
+  }
+}
+@keyframes closeMenu {
+  0% {
+    width:@menu-width-close*6.5;
+  }
+  100% {
+    width: @menu-width-close;
+  }
+}
+
+@-moz-keyframes openExp  {
+  0% {
+    max-height:@menu-width-close;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    max-height:@menu-width-close*10;
+  }
+}
+@-webkit-keyframes openExp  {
+  0% {
+    max-height:@menu-width-close;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    max-height:@menu-width-close*10;
+  }
+}
+@-o-keyframes openExp  {
+  0% {
+    max-height:@menu-width-close;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    max-height:@menu-width-close*10;
+  }
+}
+@keyframes openExp
+ {
+  0% {
+    max-height:@menu-width-close;
+    opacity: 0.75;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    max-height:@menu-width-close*10;
+  }
+}
+
+@keyframes closeExp
+ {
+  from {
+    max-height:@menu-width-close*10;
+  }
+  to {
+    max-height:@menu-width-close;
+  }
+}
+
+#EC-Menu {
+
+  + #Menu-resposive-background {
+    position:fixed;
+    overflow:hidden;
+    z-index:9998;
+    top:0px;
+    left:0px;
+    bottom:0px;
+    right:0px;
+    background-color: none;
+    display:none;
+  }
+
+    .pin {
+        a {
+
+        }    
+        .title {
+            display: block;
+            background-image: url(../Images/Cyclops-BioPos.logo.menu.png);
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: left;
+            text-indent: -9999px;
+            opacity: 0;
+
+            -webkit-transition: opacity 0.35s ease;
+            -moz-transition: opacity 0.35s ease;
+            -o-transition: opacity 0.35s ease;
+            transition: opacity 0.35s ease;
+        }    
+    }
+  
+  &.fixed {
+      position: fixed;
+      top: 0px;
+
+      //.pin .title { transition-delay: 0s;}
+  }
+
+  position: absolute;
+  z-index: 9999;
+  height: 100%;
+  //display: inline-block;
+  overflow-y:auto;
+  top: 2.81rem;
+  left: 0px;
+  //min-height: 100%;
+  bottom: 0px;
+  padding-top: @menu-icon-pdding !important;
+  background-color: @menu-color-base;
+
+  /* Default attributes */
+
+  &, * {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    color: @menu-color-text;
+    box-sizing: border-box;
+  }
+
+  /* Switch status menu */
+
+  &.open {
+    width: 100%;
+    max-width:@menu-width-close * 6.5;
+
+    -webkit-animation-name: openMenu;
+    -webkit-animation-duration: 0.35s;
+    -webkit-animation-timing-function: ease;
+    -moz-animation-name: openMenu;
+    -moz-animation-duration: 0.35s;
+    -moz-animation-timing-function: ease;
+    -o-animation-name: openMenu;
+    -o-animation-duration: 0.35s;
+    -o-animation-timing-function: ease;
+    animation-name: openMenu;
+    animation-duration: 0.35s;
+    animation-timing-function: ease;
+
+    &.fixed .pin .title { opacity: 1; }
+
+  }
+
+  &.close {
+    width: @menu-width-close;
+
+    -webkit-animation-name: closeMenu;
+    -webkit-animation-duration: 0.25s;
+    -webkit-animation-timing-function: ease;
+    -moz-animation-name: closeMenu;
+    -moz-animation-duration: 0.25s;
+    -moz-animation-timing-function: ease;
+    -o-animation-name: closeMenu;
+    -o-animation-duration: 0.25s;
+    -o-animation-timing-function: ease;
+    animation-name: closeMenu;
+    animation-duration: 0.25s;
+    animation-timing-function: ease;
+
+    > ul {
+
+      ul, a:after {
+        display: none!important;
+      }
+    }
+  }
+
+  &.init {
+    width: @menu-width-close;
+
+    > ul {
+
+      ul, a:after {
+        display: none!important;
+      }
+    }
+  }
+
+  > ul{
+
+    li {
+      position: relative;
+      overflow: hidden;
+      //background-color: @menu-color-base;
+     //line-height: @menu-icon-size;
+      text-indent: inherit;
+
+      a {
+        display: block;
+        //min-width:@menu-width-close * 6;
+        width: 100%;
+        color: fade( @menu-color-text, 75% );
+        line-height: 1.2rem;
+        font-size: 85%;
+        padding-left: 0.5rem;
+        padding-right: (@menu-width-close / 2);
+        padding-top: (@menu-icon-size - 1rem) / 4;
+        padding-bottom: (@menu-icon-size - 1rem) / 4;
+
+        &:hover {
+          color: @menu-color-text;
+        }
+
+        &.active {
+          color: @menu-color-text-active !important;
+        }
+      }
+
+      &.active > a {
+        background-color: @menu-color-text-active;
+        color: @menu-color-text!important;
+
+        &:hover {
+          background-color: @menu-color-text-active;
+        }
+      }
+
+      &.expandable {
+
+        > a:after {
+
+          position: absolute;
+          z-index: 1;
+          right: ( (@menu-width-close / 4) - @menu-des-size );
+          top: (@menu-icon-size / 2) - (@menu-des-size / 2);
+
+          content: "";
+          border-width: @menu-des-size;
+          border-style: solid;
+          border-color: transparent;
+          border-left-color: @menu-color-text;
+
+        }
+
+        &.hasActive.close {
+          > a {
+            border-left: 1px solid @menu-color-text-active !important;
+          }
+        }
+
+        > ul {
+          display: none;
+        }
+
+        > ul {
+          display: none;
+        }
+
+        &.open {
+
+          > ul {
+            display: block;
+            -webkit-animation-name: openExp;
+            -webkit-animation-duration: 0.75s;
+            -webkit-animation-timing-function: ease;
+            -moz-animation-name: openExp;
+            -moz-animation-duration: 0.75s;
+            -moz-animation-timing-function: ease;
+            -o-animation-name: openExp;
+            -o-animation-duration: 0.75s;
+            -o-animation-timing-function: ease;
+            animation-name: openExp;
+            animation-duration: 0.75s;
+            animation-timing-function: ease;
+            padding: 5px;
+            background-color: fade( @menu-color-hover, 10% );
+          }
+
+          > a {
+            color: @menu-color-text-active;
+            //text-shadow: 1px 1px 1px darken( @menu-color-text-active, 50% );
+            background-color: fade( @menu-color-hover, 15% );
+            //margin-left: -1px;
+          }
+
+          > a:after {
+            border-color: transparent;
+            border-top-color: @menu-color-text;
+          }
+
+        }
+
+      }
+
+    }
+
+    /* Estilo para el primer LI de la lista */
+
+    > li {
+
+      margin-left: 0px;
+      line-height: @menu-icon-size * 1.5 !important;
+
+      &.expandable {
+
+        > a:after {
+          border-width: @menu-des-size*1.5;
+          top: (@menu-icon-size / 2) * 1.5 - @menu-des-size;
+        }
+
+        > a:before {
+          top: (@menu-icon-size / 2) * 1.5 - 0.1rem!important;
+          left: 0.2rem!important;
+        }
+
+        &.open {
+          border-right: none !important;
+          border-left: none !important;
+
+          > ul {
+            /*padding-left: @menu-width-close / 2 !important;*/
+            padding-left: @menu-width-close / 1.25 !important;
+            //background-color: transparent !important;
+          }
+        }
+
+      }
+
+      &:after {
+        top: ((@menu-icon-size * 1.5 ) / 2) - @menu-des-size!important;
+      }
+
+      > a {
+
+        //background-color: transparent !important;
+      }
+
+      > a {
+        /*padding-left: @menu-width-close;*/
+        line-height: @menu-icon-size * 1.5 !important;
+        //font-size: 100%;
+        /*padding-bottom: 0px;
+        padding-top: 0px;*/
+        padding: 0px 0px 0px @menu-width-close;
+
+          > i {
+            position: absolute;
+            text-indent: 0px !important;
+            z-index: 1;
+            font-size: @menu-icon-size;
+            padding: 0 @menu-icon-pdding;
+            top: 0px;
+            left: 0px;
+
+            &:before {
+              width: @menu-icon-size;
+              text-align: center;
+            }
+          }
+
+          > img {
+              position: absolute;
+              top: (1.5rem) / 4;
+              left: @menu-icon-pdding;
+
+              .menu-img-size()
+
+          }
+
+          > div {
+              position: absolute;
+              top: 0px;
+              left: 0px;
+              width:  @menu-width-close;
+              height: @menu-icon-size * 1.5;
+              background-repeat: no-repeat;
+              background-size: round(@menu-icon-size) round(@menu-icon-size);
+              background-position: center center;
+          }
+
+      }
+
+    }
+
+  }
+
+}

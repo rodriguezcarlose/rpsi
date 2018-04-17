@@ -1,0 +1,173 @@
+  #btnComment {
+    float: right;
+    font-size: 32px;
+    &.bicon:hover {
+      background-color: #008CBA;
+    }
+  }
+
+  #commentsDialog {
+    background-color: #EFEFEF;
+    padding: 1rem 0px;
+    margin: 1rem 0px;
+    display: none;
+  }
+
+  #newMessage {
+    line-height: 1.6;
+    font-size: 16px;
+    height: 160px !important;
+    padding: 0.25rem;
+  }
+
+  #addComment{
+    margin-right: 5px;
+  }
+
+  #comments {
+      margin-bottom: 1.25rem;
+
+      h4 {
+          margin: 0;
+      }
+
+      .row {
+          border-top: 1px solid #ddd;
+          padding-top: 5px;
+      }
+
+      .display.buttons {
+
+        a.bicon {
+          background-color: transparent;
+
+          i {
+            color: #666;
+            opacity: 0.75;
+          }
+
+          &:hover > i {
+            color: #007095;
+          }
+        }
+
+      }
+
+      .display.observation {
+        padding: 0 0 0 1.5rem;
+        font-size: 14px;
+      }
+
+      .conflictCaseModel {
+          padding: 5px 0px 0 5px;
+          background-color: #fff;
+
+          .buttons button {
+            margin-left: 5px;
+          }
+
+          h6 {
+
+            line-height: 32px;
+            font-size: 14px;
+            color: #666;
+            padding: 0px;
+            margin: 0px;
+
+            a.bicon, a.bimage {
+              float: left;
+              margin-right: 0.5rem;
+
+              &:hover {
+                cursor: default;
+              }
+            }
+
+          }
+
+          p {
+          }
+
+          &:hover {
+              background-color: #fafafa;
+
+              & .display.buttons a.bicon i {
+                opacity: 1
+              }
+          }
+      }
+
+      .edition.container {
+        display: none;
+        font-size: 16px;
+        padding-left: 2.25em;
+        padding-right: 1em;
+      }
+
+      textarea.edition.observation {
+        font-size: 14px;
+        line-height: 1.6;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.25em;
+        margin-top: -5px;
+        margin-left: -1px;
+        height: 160px !important;
+      }
+
+  }
+
+  .conflictsContainer {
+      position: relative;
+      background-color: #fafafa;
+  }
+
+  > h4 {
+    line-height: 36px;
+  }
+
+  p.commentError {
+    font-size: 12px;
+  }
+
+  a.bimage {
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
+    padding:0px;
+    display: table;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  a.bicon {
+    font-size: 32px;
+    background-color: #007095;
+    width: 1em;
+    height: 1em;
+    line-height: 1em;
+    overflow: hidden;
+    border-radius: 1em;
+    display: table;
+    padding:0px;
+    box-sizing: border-box;
+
+    > i[class^="fi-"] {
+      color:#fff;
+      font-size: 0.70em;
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    &:first-child, &:last-child {
+      margin: 0px;
+    }
+
+    & + a.bicon {
+      margin:0 0.5rem;
+    }
+
+  }

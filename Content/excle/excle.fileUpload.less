@@ -1,0 +1,266 @@
+﻿.uploadedFile, .fileToUpload {
+    margin: 0;
+    border-spacing: 0;
+    width: 100%;
+    margin-bottom: 0.9375rem;
+    position: relative;
+
+    button, .button {
+        padding: 0.5rem;
+        margin-left: 5px;
+        margin-bottom: 0;
+    }
+
+    tbody {
+      tr {
+        td {
+          padding: 0.2rem 0.625rem;
+        }
+
+          &:hover {
+              background: none;
+          }
+
+          input {
+              margin: 0;
+              padding: 5px;
+              height: auto;
+              box-shadow: none;
+          }
+
+          &:first-child {
+              td {
+                  &:first-child {
+                      border-right: solid 1px #DDDDDD;
+                  }
+
+                  &:last-child {
+                      border-left: solid 1px #DDDDDD;
+                  }
+              }
+          }
+      }
+    }
+}
+
+#files .progress {
+    height: 14px;
+    margin: 0px 0px 20px;
+    background-color: #fafafa;
+    border: none;
+    padding: 0;
+    border: 1px solid #cccccc;
+    overflow: hidden;
+
+    .meter {
+        background: #43AC6A;
+        height: 14px;
+        display: block;
+        color: #fff;
+        font-size: 11px;
+        line-height: 14px;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+.errorMessage {
+
+    td {
+        margin: 0px;
+        padding: 0px !important;
+        height: auto;
+        border-top: 1px solid #dedede;
+
+        p {
+            font-size: 12px;
+            margin: 0.25rem 0.25rem 0rem;
+
+            & + p {
+                margin-top: 0px;
+                border-top: 1px solid rgba(0,0,0,0.1);
+            }
+
+            &:last-child {
+                margin-bottom: 0.25rem;
+            }
+
+            &.error {
+                background-color: #f57560;
+                color: #ab1800;
+            }
+
+            &.warning {
+                background-color: #f5af69;
+                color: #824406;
+            }
+        }
+    }
+}
+
+table.fpControlsGroup {
+
+    &, & tbody, & tr, & td {
+        margin: 0px;
+        padding: 0px;
+        background-color: transparent;
+        border: none;
+        height: auto;
+        width: auto;
+    }
+}
+
+
+label.customFileUpload {
+    margin-bottom: 0px;
+    padding: 10px;
+    display: inline;
+}
+
+#FileTabs {
+    position: relative;
+    z-index: 1;
+
+    .tab-title {
+        //bottom: -2px;
+        a {
+            background-color: transparent;
+            border:1px solid transparent;
+        }
+
+        &.active a {
+            background-color: #fafafa;
+            border: 1px solid #cccccc;
+            border-bottom: 1px solid #fafafa;
+        }
+
+        & + .tab-title {
+            margin-left: 0.5rem;
+        }
+    }
+}
+
+#FileTabsContent {
+    top: -1px;
+
+    .content {
+        border: 1px solid #cccccc;
+        //border-color: #ccc transparent transparent;
+        margin-top: 0px;
+        z-index: 0;
+        padding: 1rem !important;
+        background-color: #fafafa;
+    }
+}
+
+#activeFilesMessage {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    top: -10px;
+    box-sizing: border-box;
+    padding: 0px 1rem;
+    line-height: 20px;
+
+    p {
+        color: white;
+        font-size: 12px;
+        line-height: 20px;
+        text-align: center;
+        background-color: #43ac6a;
+        border-radius: 3px;
+    }
+}
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+}
+
+#fileupload {
+    opacity: 0;
+    width: 0px;
+    /*position: absolute;
+    top: -200px;*/
+    /*top: 0;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    opacity: 0;*/
+
+    /*&:hover {
+        cursor: pointer;
+    }*/
+}
+
+#uploadedFiles {
+    &.empty:before {
+        content: "No hay archivos cargados";
+        display: block;
+        width: 100%;
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+        font-size: 24px;
+        color: #828282;
+    }
+
+    .uploadedFile {
+        border-bottom-width: 2px;
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+    }
+}
+
+#files {
+    &.empty:after {
+        content: "Selecciona o arrastra archivos";
+        display: block;
+        width: 100%;
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+        font-size: 24px;
+        color: #828282;
+    }
+
+    .fileToUpload {
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+
+        table.new-file-table {
+            &, & tr, & td {
+                margin: 0 !important;
+                padding: 0px !important;
+                border: none !important;
+                border-image-width: 0px;
+                /* width: 100%; */
+                border-collapse: collapse !important;
+                box-sizing: border-box !important;
+            }
+
+            .file-extension {
+                background-color: #cccccc;
+                color: #f9f9f9;
+                padding: 5px;
+                border: 1px solid #cccccc;
+            }
+        }
+
+        span.meter {
+            content: "";
+            position: absolute;
+            width: 0%;
+            height: 1px;
+            background-color: #43ac6a;
+            top: -1px;
+            left: 0px;
+        }
+    }
+}

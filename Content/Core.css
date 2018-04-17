@@ -1,0 +1,845 @@
+/***********************************************************
+************************************************************
+
+    TODOS LOS CAMBIOS DE ESTILO SE AGREGAN EN EL ARCHIVO Site.less (Site.css)
+
+************************************************************
+***********************************************************/
+
+/**************************************
+COLOR PRESETS
+**************************************/
+/**************************************
+BORDERS
+**************************************/
+/**************************************
+TITLES
+**************************************/
+/**************************************
+CSS LOADER
+**************************************/
+/**************************************
+TOP BAR
+**************************************/
+/**************************************
+OTHER OPTIONS
+**************************************/
+/*********************/
+/****HTML ELEMENTS****/
+/*********************/
+*:focus {
+  outline: 0;
+}
+/* Set padding to keep content from hitting the edges */
+.fluid {
+  width: 100%;
+  margin: 0 auto;
+  border-spacing: 0;
+  float: left;
+}
+.fluid.grid {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+main {
+  /*padding: 8px;
+    min-width: 1000px;*/
+  padding: 8px;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  padding-top: 43px;
+}
+/* Set width on the form input elements since they're 100% wide by default */
+h3 {
+  border-bottom: 1px solid #007095;
+  padding: 0;
+  color: #007095;
+  line-height: 1.7rem;
+}
+h4 {
+  color: #007095;
+}
+h4 span {
+  font-size: 1rem;
+  color: black;
+  font-weight: bold;
+}
+p.valid {
+  border: 2px solid #60ab60;
+  padding: 5px;
+  background-color: #F9F9F9;
+}
+p.message {
+  border: 2px solid #b27c0d;
+  padding: 5px;
+  background-color: #F9F9F9;
+}
+p.error {
+  border: 2px solid #b20d0d;
+  padding: 5px;
+  background-color: #F9F9F9;
+}
+/*************************/
+/****TEMPLATE ELEMENTS****/
+/*************************/
+.buttonPanel {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin-top: 8px;
+  background-color: #fafafa;
+  border: 1px solid #DDDDDD;
+  padding: 0.5rem;
+}
+.buttonPanel.report input[type="button"] {
+  padding: 11px 20px;
+}
+.buttonPanel .button,
+.buttonPanel button {
+  margin-bottom: 0;
+  margin-left: 0.5rem;
+}
+.ribbon {
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  margin-bottom: 10px;
+  background-color: #fafafa;
+  border: 1px solid #DDDDDD;
+  padding: 1.25rem;
+}
+.ribbon .progress {
+  margin: 0;
+  background-color: #fff;
+}
+.ribbon .buttonPanel {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.ribbon .ribbon {
+  background-color: white;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  margin-bottom: 0;
+  border: 0;
+}
+.ribbon form {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.ribbon form button.small,
+.ribbon form .button.small {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.ribbon form input[type="file"],
+.ribbon form input[type="checkbox"],
+.ribbon form input[type="radio"] {
+  margin: 0;
+}
+.ribbon form label {
+  padding-bottom: 0;
+}
+.ribbon input[type=text].jqx-input,
+.ribbon input[type=password].jqx-input {
+  padding: 5px 0;
+  margin: 3px 0;
+}
+.odd {
+  background-color: #ffffff;
+}
+.even {
+  background-color: #fafafa;
+}
+.picFrame img {
+  width: 100%;
+}
+.picFrame img,
+.picFrame input {
+  background-color: white;
+  padding: 5px;
+  border: 1px solid #DDDDDD;
+}
+.picFrame input {
+  margin: 0;
+  border-top: none;
+}
+/*Loading************/
+/********************/
+#LoadingDiv #LoadingDivBg {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  background-color: black;
+  opacity: 0.5;
+  z-index: 1005;
+  width: 100%;
+  height: 100%;
+}
+#LoadingDiv #LoadingDivContainer {
+  background-color: white;
+  border-radius: 50%;
+  border: none;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 70px;
+  height: 70px;
+  z-index: 1005;
+}
+#LoadingDiv #LoadingDivImg {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  background-color: white;
+  border-radius: 5px;
+  border: 10px solid white;
+}
+/******************/
+/****CSS LOADER****/
+/******************/
+i.spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 5px solid #007095;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+i.spinner:before,
+i.spinner:after {
+  display: block;
+  content: '';
+  position: absolute;
+  border-radius: 1em;
+  background: #007095;
+  bottom: 50%;
+  left: calc(45%);
+  width: 10%;
+  height: calc(50%);
+  transform-origin: 50% 100%;
+}
+i.spinner:before {
+  width: 10%;
+  left: calc(47%);
+  animation: rotate calc(1s) linear infinite;
+}
+i.spinner:after {
+  height: 35%;
+  animation: rotate 12s linear infinite;
+}
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+#Dialog fieldset {
+  display: block;
+  font-size: 14px;
+}
+/*Login Form*********/
+/********************/
+#LogInForm {
+  border: none;
+  background: none;
+  padding: 0;
+}
+#LogInForm legend {
+  font-size: 26px;
+  color: #007095;
+  margin-bottom: 10px;
+}
+/*Horizontal Tabs****/
+/********************/
+.HorizontalTabLayout.fluid {
+  max-width: 100%;
+  min-width: 62.5rem;
+}
+.HorizontalTabLayout .TabHeader {
+  padding: 3px 0px 0px 1px;
+  background-color: #fafafa;
+}
+.HorizontalTabLayout .TabContent {
+  border-top: 1px solid #dddddd !important;
+}
+.HorizontalTabLayout .TabContent .content {
+  padding: 16px;
+}
+.HorizontalTabLayout .TabContent .content .content {
+  padding: 0;
+}
+.HorizontalTabLayout .tab-title {
+  margin-left: 5px;
+}
+.HorizontalTabLayout .tab-title a {
+  padding: 0.5rem;
+}
+.HorizontalTabLayout .tab-title.active {
+  border: 1px solid #dddddd;
+  border-bottom: none;
+  margin-bottom: -1px !important;
+}
+/*Vertical Tabs******/
+/********************/
+.VerticalTabLayout {
+  position: relative;
+  background-color: white;
+  min-height: 240px;
+  margin-bottom: 5px;
+  border: 1px solid #cccccc;
+}
+.VerticalTabLayout .TabHeader {
+  border-right: 1px solid #cccccc;
+  padding: 13px 0px 0px 0px;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  background-color: #fafafa;
+}
+.VerticalTabLayout .TabContent {
+  box-sizing: border-box;
+  z-index: 0;
+  top: 0;
+  height: 100%;
+  background-color: white;
+}
+.VerticalTabLayout .TabContent .content {
+  padding: 16px;
+}
+.VerticalTabLayout .TabContent .content .content {
+  padding: 0;
+}
+.VerticalTabLayout .tabs-content.content {
+  border-left: none;
+  background-color: white;
+  position: relative;
+}
+.VerticalTabLayout .tabs.vertical.content {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 0 0 5px;
+  border: none;
+  right: 0;
+  top: 30px;
+}
+.VerticalTabLayout .tabs.vertical.content li {
+  border: none;
+  margin-top: 5px;
+}
+.VerticalTabLayout .tabs.vertical.content li.active {
+  border: 1px solid #cccccc;
+  border-right: none;
+  z-index: 500;
+  right: -1px;
+  position: relative;
+}
+.VerticalTabLayout .tabs.vertical.content li a {
+  padding: 0.5rem;
+  font-size: 0.85rem;
+}
+.HorizontalTabLayout .tabs-content.content,
+.VerticalTabLayout .tabs-content.content {
+  margin-bottom: 0;
+}
+.HorizontalTabLayout .buttonPanel,
+.VerticalTabLayout .buttonPanel {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+/*Modifiers*/
+.no-pad-top {
+  padding-top: 0 !important;
+}
+.no-pad-bottom {
+  padding-bottom: 0 !important;
+}
+.no-pad-left {
+  padding-left: 0 !important;
+}
+.no-pad-right {
+  padding-right: 0 !important;
+}
+.no-pad {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.margin-1 {
+  margin-top: 1rem;
+}
+.no-margin-bottom {
+  margin-bottom: 0 !important;
+}
+.no-border {
+  border: none;
+}
+/*Borders*/
+.border.top {
+  border-top: 1px solid #cccccc;
+}
+.border.bottom {
+  border-bottom: 1px solid #cccccc;
+}
+.border.left {
+  border-left: 1px solid #cccccc;
+}
+.border.right {
+  border-right: 1px solid #cccccc;
+}
+.ErrorImg {
+  content: url('../Content/Images/Icons/error_48.png');
+}
+.ValidImg {
+  content: url('../Content/Images/Icons/valid_48.png');
+}
+.WarningImg {
+  content: url('../Content/Images/Icons/warning_48.png');
+}
+.ServerError {
+  position: relative;
+}
+.ServerError h2 {
+  padding-left: 48px;
+}
+.ServerError .small-12.column.httpErrorMessage p {
+  color: #6a6a6b;
+}
+.ServerError .httpErrorType {
+  background-color: #007095;
+  border-radius: 50px;
+  margin: 1rem;
+  margin-top: -25px;
+}
+.ServerError .httpErrorType h3 {
+  color: white;
+  font-size: 3rem;
+  padding: 0;
+  margin: 2px 0 0 0;
+  line-height: 1.4;
+  border: none;
+}
+#ModalDialogMessages button {
+  margin-bottom: 0;
+}
+.dataTableActions {
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  margin-bottom: 10px;
+  background-color: #fafafa;
+  border: 1px solid #DDDDDD;
+  padding: 1.25rem;
+  margin: 0;
+  margin-bottom: -1px;
+  padding: 0.5rem;
+}
+.dataTableActions .progress {
+  margin: 0;
+  background-color: #fff;
+}
+.dataTableActions .buttonPanel {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.dataTableActions .ribbon {
+  background-color: white;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  margin-bottom: 0;
+  border: 0;
+}
+.dataTableActions form {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.dataTableActions form button.small,
+.dataTableActions form .button.small {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.dataTableActions form input[type="file"],
+.dataTableActions form input[type="checkbox"],
+.dataTableActions form input[type="radio"] {
+  margin: 0;
+}
+.dataTableActions form label {
+  padding-bottom: 0;
+}
+.dataTableActions input[type=text].jqx-input,
+.dataTableActions input[type=password].jqx-input {
+  padding: 5px 0;
+  margin: 3px 0;
+}
+.dataTableActions button,
+.dataTableActions .button {
+  margin: 0;
+}
+/***************************/
+/****Foundation ELEMENTS****/
+/***************************/
+.row .linebreak {
+  border-bottom: 1px solid #007095;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+}
+.row .row.linebreak {
+  border-bottom: 1px solid #007095;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+}
+[data-reveal] [data-error="details"] {
+  color: #b20d0d;
+}
+.reveal-modal-bg {
+  position: fixed;
+}
+.reveal-modal {
+  padding-top: 70px;
+}
+.reveal-modal h3 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 13px;
+  background-color: #F7F7F7;
+  border-bottom: none;
+  width: 100%;
+  z-index: -1;
+  margin: 0;
+}
+.reveal-modal .close-reveal-modal {
+  top: 0.4rem;
+  right: 1rem;
+}
+.reveal-modal.error h3,
+.reveal-modal.valid h3,
+.reveal-modal.warning h3 {
+  font-size: 32px;
+  border-bottom: none;
+}
+.reveal-modal.error h3 {
+  color: #b20d0d;
+}
+.reveal-modal.error h3::before {
+  content: url('../Content/Images/Icons/error_24.png');
+}
+.reveal-modal.valid h3 {
+  color: #007a00;
+}
+.reveal-modal.valid h3::before {
+  content: url('../Content/Images/Icons/valid_24.png');
+}
+.reveal-modal.warning h3 {
+  color: #b78b00;
+}
+.reveal-modal.warning h3::before {
+  content: url('../Content/Images/Icons/warning_24.png');
+}
+.top-bar-section {
+  line-height: inherit;
+  height: inherit;
+}
+.top-bar-section ul {
+  line-height: inherit;
+  height: inherit;
+}
+.top-bar-section .has-dropdown > a:after {
+  top: 50%;
+}
+.top-bar-section li:not(.has-form) a:not(.button),
+.top-bar-section ul li,
+.top-bar {
+  background-color: #007095;
+}
+.top-bar-section li:not(.has-form) a:not(.button) .name h1,
+.top-bar-section ul li .name h1,
+.top-bar .name h1 {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: none;
+}
+.top-bar-section li:not(.has-form) a:not(.button) .name h1 a img,
+.top-bar-section ul li .name h1 a img,
+.top-bar .name h1 a img {
+  height: 35px;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+}
+.top-bar-section li:not(.has-form) a:not(.button) h2,
+.top-bar-section ul li h2,
+.top-bar h2 {
+  padding: 0 15px;
+  line-height: 35px;
+  display: block;
+  width: 100%;
+  color: white;
+  padding-left: 15px;
+  font-size: 1.2rem;
+  font-weight: normal;
+  text-transform: none;
+  background: none;
+  margin: 0;
+}
+.top-bar-section li:not(.has-form) a:not(.button) a.appLink,
+.top-bar-section ul li a.appLink,
+.top-bar a.appLink {
+  background-color: #005A77 !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
+.top-bar,
+.top-bar.expanded .title-area {
+  background-color: #007095;
+  height: 35px;
+  z-index: 1003;
+}
+.top-bar-section li:not(.has-form) a:not(.button):hover {
+  background: "";
+}
+.top-bar-section li:not(.has-form) a:not(.button),
+.top-bar .name h1 {
+  line-height: 35px;
+}
+.top-bar-section li:not(.has-form) a:not(.button) a,
+.top-bar .name h1 a {
+  height: inherit;
+}
+.top-bar .name,
+.top-bar .title-area {
+  height: inherit;
+}
+.top-bar.expanded .toggle-topbar.menu-icon {
+  margin-top: -16px;
+}
+.top-bar.expanded .toggle-topbar a {
+  color: #01a4d9;
+}
+.top-bar.expanded .toggle-topbar a span:after {
+  box-shadow: 0 0 0 1px #01a4d9, 0 7px 0 1px #01a4d9, 0 14px 0 1px #01a4d9;
+}
+label {
+  font-weight: bold;
+  overflow: hidden;
+}
+label.inline {
+  font-weight: normal;
+}
+.checkList {
+  padding: 0;
+}
+.checkList label {
+  height: auto;
+  display: inline;
+  margin: 5px 0;
+}
+.checkList input[type=checkbox] {
+  margin: 10px 0;
+  width: 20px;
+  height: auto;
+}
+.column.inline,
+.columns.inline {
+  display: flex;
+}
+.column.inline label,
+.columns.inline label {
+  width: 200px;
+}
+.column.inline input,
+.columns.inline input,
+.column.inline select,
+.columns.inline select,
+.column.inline .customInput,
+.columns.inline .customInput {
+  flex: 1;
+}
+.column.inline div label,
+.columns.inline div label {
+  width: auto;
+}
+.customInput {
+  border-radius: 0;
+  background-color: #FFFFFF;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #cccccc;
+  box-shadow: none;
+  color: #444444;
+  display: block;
+  font-family: inherit;
+  font-size: 0.875rem;
+  height: 1.8125rem;
+  margin: 0 0 1rem 0;
+  padding: 0 0.33333rem!important;
+}
+.customInput input[type="checkbox"],
+.customInput input[type="radio"] {
+  margin: 0.35rem 0 0 0;
+}
+.reportModalWindow {
+  max-width: 100%;
+}
+.reportModalWindow #tdTop {
+  padding: 0;
+}
+.subreportTextData p {
+  margin-bottom: 10px;
+  line-height: normal;
+  font-size: 12px;
+}
+fieldset {
+  margin: 0;
+}
+/*MENU*/
+ul#menu {
+  border-bottom: 1px #5C87B2 solid;
+  padding: 10px 0 2px;
+  position: relative;
+  margin: 0;
+  text-align: right;
+}
+ul#menu li {
+  display: inline;
+  list-style: none;
+}
+ul#menu li#greeting {
+  padding: 10px 20px;
+  font-weight: bold;
+  text-decoration: none;
+  line-height: 2.8em;
+  color: #fff;
+}
+ul#menu li a {
+  padding: 10px 20px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 1.5em;
+  background-color: #e8eef4;
+  color: #034af3;
+  border-radius: 4px 4px 0 0;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+}
+ul#menu li a:hover {
+  background-color: #fff;
+  text-decoration: none;
+}
+ul#menu li a:active {
+  background-color: #a6e2a6;
+  text-decoration: none;
+}
+ul#menu li.active a {
+  background-color: #fff;
+  color: #034af3;
+}
+/***************************/
+/****DataTables ELEMENTS****/
+/***************************/
+table.dataTable {
+  margin: 0 0 0.5em 0 !important;
+}
+table.dataTable tr td {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+@media only screen and (max-width: 64em) {
+  table thead {
+    display: none;
+  }
+  table tbody tr td {
+    position: relative;
+    display: block;
+    border-bottom: 1px solid #f1f1f1;
+    padding: 0.5rem 1rem;
+  }
+  table tbody tr td[data-th] {
+    padding: 0px 1rem;
+    text-align: left !important;
+  }
+  table tbody tr td[data-th]:before {
+    content: attr(data-th);
+    display: inline-block;
+    padding: 0.5rem 0;
+    margin-right: 1rem;
+    width: 33%;
+    font-weight: 700;
+    border-right: 1px solid #f1f1f1;
+  }
+  table tbody tr.expand td {
+    display: block;
+    background-color: #d6ecfc;
+  }
+  table tbody tr.expand td:first-child {
+    background-color: #bde2fc;
+  }
+  table tbody tr.contract td {
+    display: none;
+  }
+  table tbody tr.contract td:first-child {
+    display: block;
+  }
+}
+/*Nuevo Menu*/
+#NewMenu {
+  width: 100%;
+  background-color: #008cba;
+  border-bottom: 6px solid #007095;
+  position: absolute;
+  top: 35px;
+  z-index: 1;
+}
+#NewMenu .menuIcon {
+  text-align: center;
+  display: block;
+  color: white;
+  margin: 1rem 0;
+  height: 100px;
+}
+#NewMenu .menuIcon:before {
+  display: block;
+  text-align: center;
+  font-size: 55px;
+  color: white;
+}
+#NewMenu .menuIcon:hover {
+  background-color: #007095;
+  cursor: pointer;
+}
+#NewMenu .menuList {
+  display: none;
+}
+#NewMenu .menuList ul {
+  margin: 1rem;
+  list-style: none;
+}
+#NewMenu .menuList ul li:hover {
+  list-style: initial;
+}
+#NewMenu .menuList ul li a {
+  color: white;
+}

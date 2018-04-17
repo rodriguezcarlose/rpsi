@@ -1,0 +1,9 @@
+Pasos para que funcione el Captcha
+
+1. abrir el archivo hosts que se encuentra en la ruta C:\Windows\System32\drivers\etc de su máquina local
+2. agregar la siguiente linea al final del archivo:
+	127.0.0.1	controlnomina.com
+3. abrir el archivo index.php que se encuentra en la ruta C:\xampp\htdocs o en la ruta donde configuro su XAMPP
+4. comentar la línea header('Location: '.$uri.'/dashboard/'); asi ---> //header('Location: '.$uri.'/dashboard/');
+5. agregar la siguiente línea justo despues de la linea comentada:
+	header('Location: '.$uri.'/controlnomina/');

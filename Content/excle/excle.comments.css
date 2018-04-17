@@ -1,0 +1,138 @@
+#btnComment {
+  float: right;
+  font-size: 32px;
+}
+#btnComment.bicon:hover {
+  background-color: #008CBA;
+}
+#commentsDialog {
+  background-color: #EFEFEF;
+  padding: 1rem 0px;
+  margin: 1rem 0px;
+  display: none;
+}
+#newMessage {
+  line-height: 1.6;
+  font-size: 16px;
+  height: 160px !important;
+  padding: 0.25rem;
+}
+#addComment {
+  margin-right: 5px;
+}
+#comments {
+  margin-bottom: 1.25rem;
+}
+#comments h4 {
+  margin: 0;
+}
+#comments .row {
+  border-top: 1px solid #ddd;
+  padding-top: 5px;
+}
+#comments .display.buttons a.bicon {
+  background-color: transparent;
+}
+#comments .display.buttons a.bicon i {
+  color: #666;
+  opacity: 0.75;
+}
+#comments .display.buttons a.bicon:hover > i {
+  color: #007095;
+}
+#comments .display.observation {
+  padding: 0 0 0 1.5rem;
+  font-size: 14px;
+}
+#comments .conflictCaseModel {
+  padding: 5px 0px 0 5px;
+  background-color: #fff;
+}
+#comments .conflictCaseModel .buttons button {
+  margin-left: 5px;
+}
+#comments .conflictCaseModel h6 {
+  line-height: 32px;
+  font-size: 14px;
+  color: #666;
+  padding: 0px;
+  margin: 0px;
+}
+#comments .conflictCaseModel h6 a.bicon,
+#comments .conflictCaseModel h6 a.bimage {
+  float: left;
+  margin-right: 0.5rem;
+}
+#comments .conflictCaseModel h6 a.bicon:hover,
+#comments .conflictCaseModel h6 a.bimage:hover {
+  cursor: default;
+}
+#comments .conflictCaseModel:hover {
+  background-color: #fafafa;
+}
+#comments .conflictCaseModel:hover .display.buttons a.bicon i {
+  opacity: 1;
+}
+#comments .edition.container {
+  display: none;
+  font-size: 16px;
+  padding-left: 2.25em;
+  padding-right: 1em;
+}
+#comments textarea.edition.observation {
+  font-size: 14px;
+  line-height: 1.6;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.25em;
+  margin-top: -5px;
+  margin-left: -1px;
+  height: 160px !important;
+}
+.conflictsContainer {
+  position: relative;
+  background-color: #fafafa;
+}
+ > h4 {
+  line-height: 36px;
+}
+p.commentError {
+  font-size: 12px;
+}
+a.bimage {
+  width: 32px;
+  height: 32px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center center;
+  padding: 0px;
+  display: table;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+a.bicon {
+  font-size: 32px;
+  background-color: #007095;
+  width: 1em;
+  height: 1em;
+  line-height: 1em;
+  overflow: hidden;
+  border-radius: 1em;
+  display: table;
+  padding: 0px;
+  box-sizing: border-box;
+}
+a.bicon > i[class^="fi-"] {
+  color: #fff;
+  font-size: 0.70em;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+a.bicon:first-child,
+a.bicon:last-child {
+  margin: 0px;
+}
+a.bicon + a.bicon {
+  margin: 0 0.5rem;
+}
