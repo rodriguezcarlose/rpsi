@@ -23,7 +23,7 @@
         <ul class="right">
 				<?php 
                     if (isset($_SESSION['logged_in'])  === true) :
-                        // construimos el menú
+                        // construimos el menï¿½
                         echo '<li class="has-dropdown">';
                         echo '<a href="#">MEN&Uacute</a>';
                         echo '<ul class="dropdown">';
@@ -91,6 +91,16 @@
 		var content = "<?= str_replace("\n", "", $error); ?>";
 		//var content = "Tets";
 		var type = 2;
+		toastMessage(title, content, type, null);
+	</script>
+<?php endif; ?>
+
+<?php if (isset($success)) : ?>
+	<script languaje="javascript">
+		var title = "";
+		var content = "<?= str_replace("\n", "", $success); ?>";
+		//var content = "Tets";
+		var type = 1;
 		toastMessage(title, content, type, null);
 	</script>
 <?php endif; ?>

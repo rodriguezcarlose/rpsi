@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 //$config['base_url'] = 'http://localhost/loginmenu/';
 
-$config['base_url'] = 'http://localhost/rpsi/';
+$config['base_url'] = 'http://controlnomina.com/rpsi';
 
 /*
 |--------------------------------------------------------------------------
