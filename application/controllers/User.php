@@ -66,8 +66,8 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('username', 'Usuario', 'required|valid_email', array('required' => 'El Campo Usuario es requerido', 'valid_email'=> 'El Campo Usuario de ser su correo electronico'));
         $this->form_validation->set_rules('password', 'Clave', 'required',array('required' => 'El Campo Clave es requerido'));
 
-        //validación del captcha
-        //$this->form_validation->set_rules('g-recaptcha-response', '', 'required',array('required' => 'El Campo capcha es requerido'));
+        //validaciï¿½n del captcha
+        $this->form_validation->set_rules('g-recaptcha-response', '', 'required',array('required' => 'El Campo capcha es requerido'));
         
         // Eliminamos la session en caso que se encuentre activa
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
@@ -97,7 +97,7 @@ class User extends CI_Controller {
                 $user    = $this->user_model->get_user($user_id);
                 
             
-                //consultamos el menú que le corresponde al rol asignado al usuario 
+                //consultamos el menï¿½ que le corresponde al rol asignado al usuario 
                 $this->load->model('Menu_model');
                 $menu = $this->Menu_model->get_menu($user->id_rol);
                 
@@ -117,7 +117,7 @@ class User extends CI_Controller {
             } else {
                 
                 // login failed
-                $data->error = 'Error de autenticación.';
+                $data->error = 'Error de autenticaciï¿½n.';
                 
                 // send error to the view
                 $this->load->view('templates/header');

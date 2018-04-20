@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
         <head>
-                <title>Sistema de Gestion de Nómina</title>
+                <title>Sistema de Gestion de Nï¿½mina</title>
                     <link href="<?= base_url()?>Content/foundation/foundation.css" rel="stylesheet"/>
                     <link href="<?= base_url()?>Content/foundation/foundation.mvc.css" rel="stylesheet"/>
                     <link href="<?= base_url()?>Content/foundation/foundation-icons.css" rel="stylesheet"/>
@@ -10,7 +10,7 @@
                     <link href="<?= base_url()?>Content/excle/excle.autocomplete.css" rel="stylesheet" />
                     <link href="<?= base_url()?>Content/excle/excle.autocomplete.multiple.css" rel="stylesheet" />
                     <link href="<?= base_url()?>Content/Site.css" rel="stylesheet"/>
-                    <!--script src='https://www.google.com/recaptcha/api.js'></script-->
+                    <script src='https://www.google.com/recaptcha/api.js'></script>
                 
         </head>
         <body>
