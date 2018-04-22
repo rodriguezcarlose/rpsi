@@ -55,7 +55,6 @@
                 	<table id="dataTable">
                 		<thead>
                 			<tr>
-                				<td>ID</td>
                  				<!--td>Cod. Estado</td-->
                     			<td>Estado</td>
                                 <!--td>Cod. Municipio</td-->
@@ -76,14 +75,9 @@
                 		</thead>
                 		<tbody>
                         <?php 
-                            $i = 0;
                             foreach ($results as $data) { 
-                                $i++;
                             ?>
                                 <tr>
-                                	<td>
-                                		<?= $i?>
-                                	</td>
                                 
                                     <!--td>
                                     	<?php //$data->codigo_estado ?>

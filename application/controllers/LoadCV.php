@@ -49,7 +49,7 @@ class LoadCV extends CI_Controller
         if (isset($_SESSION['table_temp_nom'])) {
             $this->load->library('pagination');
             $per_page_valid = 25;
-            $start_index = 0;
+            $start_index = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
             $tablename = $_SESSION['table_temp_nom'];
             $total_records = $this->MaquinaVotacion_model->get_total($tablename);
             
@@ -58,7 +58,7 @@ class LoadCV extends CI_Controller
             
             $settings = $this->config->item('pagination');
             $settings['total_rows'] = $total_records;
-            $settings['base_url'] = base_url() . 'index.php/loadCV';
+            $settings['base_url'] = base_url() . 'index.php/loadCV/index';
             
             // use the settings to initialize the library
             $this->pagination->initialize($settings);
