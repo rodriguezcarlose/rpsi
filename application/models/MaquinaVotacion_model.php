@@ -143,4 +143,63 @@ class MaquinaVotacion_model extends CI_Model
     {
         return $this->db->get($table_name);
     }
+    
+    public function getDetailVotingMachine($codigocentro = '', $mesa=''){
+        
+        $result=$this->db->query("SELECT 	mv.id,
+                                            mv.codigo_estado,
+                                        	mv.estado,
+                                        	mv.codigo_municipio,
+                                        	mv.municipio,
+                                        	mv.codigo_parroquia,
+                                        	mv.parroquia,
+                                        	mv.codigo_centrovotacion,
+                                        	mv.centro_votacion,
+                                        	mv.mesa,
+                                        	mv.modelo_maquina,
+                                        	em.descripcion estatus
+                                        FROM maquina_votacion mv, estatus_maquina em
+                                        WHERE mv.id_estatus_maquina=em.id
+                                        AND mv.codigo_centrovotacion='" . $codigocentro . "' " .
+                                        "AND mv.mesa='" . $mesa . "'");
+        
+        if ($result->num_rows()>0){
+            
+            return $result;
+            
+        }else {
+            
+            return null;
+        }
+        
+    }
+    
+    public function getDetailTestVotingMachine($id){
+        
+        $result=$this->db->query("SELECT 	mv.id,
+                                            mv.codigo_estado,
+                                        	mv.estado,
+                                        	mv.codigo_municipio,
+                                        	mv.municipio,
+                                        	mv.codigo_parroquia,
+                                        	mv.parroquia,
+                                        	mv.codigo_centrovotacion,
+                                        	mv.centro_votacion,
+                                        	mv.mesa,
+                                        	mv.modelo_maquina,
+                                        	em.descripcion estatus
+                                        FROM maquina_votacion mv, estatus_maquina em
+                                        WHERE mv.id_estatus_maquina=em.id
+                                        AND mv.id=" . $id );
+        
+        if ($result->num_rows()>0){
+            
+            return $result;
+            
+        }else {
+            
+            return null;
+        }
+        
+    }
 }

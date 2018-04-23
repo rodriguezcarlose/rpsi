@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
         <head>
-                <title>Sistema de Gestion de N�mina</title>
+                <title>Registro Pruebas Sistema Integrado</title>
                     <link href="<?= base_url()?>Content/foundation/foundation.css" rel="stylesheet"/>
                     <link href="<?= base_url()?>Content/foundation/foundation.mvc.css" rel="stylesheet"/>
                     <link href="<?= base_url()?>Content/foundation/foundation-icons.css" rel="stylesheet"/>
