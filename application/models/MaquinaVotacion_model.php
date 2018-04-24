@@ -202,4 +202,15 @@ class MaquinaVotacion_model extends CI_Model
         }
         
     }
+    
+    public function updateStatusVotingMachine($idmaquina='', $status=''){        
+        $this->db->set("id_estatus_maquina",$status);
+        $this->db->where("id",$idmaquina);
+        $this->db->update("maquina_votacion");
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return true;
+        }        
+    }
 }

@@ -82,6 +82,54 @@ class voting_machine extends CI_Controller
         $this->load->view('templates/footer');
         
     }
+    
+    
+    public function resettest()
+    {
+        $data = new stdClass();
+        $seleccionada=1;
+        $this->form_validation->set_rules('codigo_centrovotacion', 'C&oacute;digo de centro de votacion', 'trim|required|xss_clean|exact_length[9]', array('required' => 'El centro de votaci&oacute;n es requerido','numeric' => 'El centro de votaci&oacute;n solo permite numeros','exact_length' => 'El centro de votaci&oacute;n debe indicar 9 digitos'));
+        $this->form_validation->set_rules('mesa', 'Mesa', 'trim|required|xss_clean|numeric|min_length[1]|max_length[2]',array('required' => 'La mesa es requerida','numeric' => 'La mesa solo permite numeros','min_length' => 'La mesa debe indicar al menos 1 digitos','max_length' => 'La mesa debe indicar m&aacute;ximo 2 digitos'));
+        
+        if ($this->form_validation->run() == FALSE) {
+            
+            $this->load->view('templates/header');
+            $this->load->view('templates/navigation');
+            $this->load->view('test/reset_test_voting_machine');
+            $this->load->view('templates/footer');
+        } else {
+            
+            $centrovotacion=$this->input->post('codigo_centrovotacion');
+            $mesa=$this->input->post('mesa');
+            
+            $this->load->model('MaquinaVotacion_model');
+            $result=$this->MaquinaVotacion_model->getDetailVotingMachine($centrovotacion,$mesa);
+
+            if($result != null){
+                $dataVotingMachine=$result->result();
+                $dataVotingMachine[0]->id;
+                $result=$this->MaquinaVotacion_model->updateStatusVotingMachine($dataVotingMachine[0]->id,$seleccionada);
+
+                if ($result){
+                    $data->success = "Reiniciada Exitosamente";
+                }else{
+                    $data->error = "Error al Reiniciar M&aacute;quina Votaci&oacute;n";
+                }
+                $this->load->view('templates/header');
+                $this->load->view('templates/navigation',$data);
+                $this->load->view('test/reset_test_voting_machine');
+            
+            }else{
+                $data->error = "No se encontr&oacute; el n&uacute;mero consultado.";
+                $this->load->view('templates/header');
+                $this->load->view('templates/navigation',$data);
+                $this->load->view('test/reset_test_voting_machine');
+                $this->load->view('templates/footer');
+            }
+            
+        }
+        
+    }
 
     public function consulta_lista_errores()
     {
