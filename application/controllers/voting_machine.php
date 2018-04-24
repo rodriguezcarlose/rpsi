@@ -95,7 +95,7 @@ class voting_machine extends CI_Controller
         $this->load->view('templates/navigation');
         $this->load->view('test/test_voting_machine',$data);
         $this->load->view('templates/footer');
-    
+    }
     public function resettest()
     {
         $data = new stdClass();
@@ -237,15 +237,15 @@ class voting_machine extends CI_Controller
                     break;
                     
             }
-            //validamos el código de Validación
-            // Si no seleciono un error el código de validación es requerido
+            //validamos el cï¿½digo de Validaciï¿½n
+            // Si no seleciono un error el cï¿½digo de validaciï¿½n es requerido
             if($cantError == 0 && $this->input->post('estatusmv') !==4 && $this->form_validation->required($this->input->post('codigo')) == false){
-                $data->error = "El Código Validación es requerido";
+                $data->error = "El Cï¿½digo Validaciï¿½n es requerido";
                 $this->load->view('templates/header');
                 $this->load->view('templates/navigation',$data);
                 $this->load->view('test/test_voting_machine',$data);
                 $this->load->view('templates/footer');
-                //si no selecciono error y el codigo de validación no pertenece al proximo estatus
+                //si no selecciono error y el codigo de validaciï¿½n no pertenece al proximo estatus
             }else if($cantError == 0 && $this->input->post('estatusmv') !==4 && $codigo !== $this->input->post('codigo')){
                 $data->error = "El c&oacute;digo no es v&aacute;lido, se esperra el c&oacute;digo de ".$proxEstatus.".";
                 $this->load->view('templates/header');
@@ -310,7 +310,7 @@ class voting_machine extends CI_Controller
                     $this->Proceso_model->insertproceso($proceso,$procesoError,$this->input->post('idestatusmaquina'));
                 }
                 $data = new stdClass();
-                $data->success = "Se ha registrado con &eacute;xito el proceso de la máquina.";
+                $data->success = "Se ha registrado con &eacute;xito el proceso de la m&aacute;quina.";
                 $this->data = $data;
                 $this->index();
                 
