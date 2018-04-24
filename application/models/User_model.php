@@ -51,14 +51,28 @@ class User_model extends CI_Model {
      * @param mixed $password
      * @return bool true on success, false on failure
      */
-    public function resolve_user_login($email, $clave) {
+    public function resolve_user_login($email, $clave, $meson) {
         
         $this->db->select('clave');
         $this->db->from('usuario');
         $this->db->where('correo', $email);
         $hash = $this->db->get()->row('clave');
         
-        return $this->verify_password_hash($clave, $hash);
+        if ($this->verify_password_hash($clave, $hash)){
+            $this->db->set("meson",$meson);
+            $this->db->set("fecha_hora_ultima_conexion",date('Y-m-d H:i:s'));
+            $this->db->where('correo', $email);
+            $this->db->update('usuario');
+            
+            
+            
+            
+            return true;
+        }else{
+            return false;
+        }
+        
+       // return $this->verify_password_hash($clave, $hash);
         
     }
     

@@ -52,7 +52,7 @@ class Voting_machine extends CI_Controller
     public function consultar()
     {
         $data = new stdClass();
-        $this->form_validation->set_rules('numero_meson', 'Numero de meson', 'trim|required|xss_clean|numeric|min_length[1]|max_length[3]',array('required' => 'El Numero de meson es requerido','numeric' => 'El Numero de meson solo permite numeros','min_length' => 'El Numero de meson debe indicar al menos 1 digitos','max_length' => 'El Numero de meson debe indicar m&aacute;ximo 2 digitos'));
+       // $this->form_validation->set_rules('numero_meson', 'Numero de meson', 'trim|required|xss_clean|numeric|min_length[1]|max_length[3]',array('required' => 'El Numero de meson es requerido','numeric' => 'El Numero de meson solo permite numeros','min_length' => 'El Numero de meson debe indicar al menos 1 digitos','max_length' => 'El Numero de meson debe indicar m&aacute;ximo 2 digitos'));
         $this->form_validation->set_rules('codigo_centrovotacionmesa', 'C&oacute;digo de centro de votacion', 'trim|required|xss_clean|exact_length[14]', array('required' => 'El centro de votaci&oacute;n es requerido','numeric' => 'El centro de votaci&oacute;n solo permite numeros','exact_length' => 'El centro de votaci&oacute;n debe indicar 14 digitos'));
         
         if ($this->form_validation->run() == FALSE) {

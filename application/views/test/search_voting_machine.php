@@ -24,10 +24,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         ?>
     	<?= form_open('/Voting_machine/consultar') ?>
-                <div class="large-4 medium-4 columns">
+                <!--  div class="large-4 medium-4 columns">
                     <label><span style="color:red;">*</span> N&uacute;mero de meson</label>
                     <input type="text" maxlength="3" placeholder="" name="numero_meson" id="numero_meson" value="<?php echo $mostrar_numero_meson; ?>"  />
-                </div>
+                </div-->
                 <div class="large-8 medium-4 columns">
                     <label><span style="color:red;">*</span> Codigo de centro de votacion mesa</label>
                     <input type="text" maxlength="14" size="14" placeholder="010101001.01.1" name="codigo_centrovotacionmesa" id="codigo_centrovotacionmesa" value="<?php echo $mostrar_codigo_centrovotacion; ?>"  />

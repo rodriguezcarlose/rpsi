@@ -11,7 +11,23 @@
                     <link href="<?= base_url()?>Content/excle/excle.autocomplete.multiple.css" rel="stylesheet" />
                     <link href="<?= base_url()?>Content/Site.css" rel="stylesheet"/>
                    <!--  <script src='https://www.google.com/recaptcha/api.js'></script> -->
-                    
+                    <script>
+                        function validar_texto(e){
+                            tecla = (document.all) ? e.keyCode : e.which;
+                        
+                            //Tecla de retroceso para borrar, siempre la permite
+                            if (tecla==8){
+                                return true;
+                            }
+                                
+                            // Patron de entrada, en este caso solo acepta numeros
+                            patron =/[0-9]/;
+                            
+                            tecla_final = String.fromCharCode(tecla);
+                            
+                            return patron.test(tecla_final);
+                        }
+					</script>
                 
         </head>
         <body>

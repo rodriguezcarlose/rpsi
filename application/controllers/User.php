@@ -65,6 +65,7 @@ class User extends CI_Controller {
         // set validation rules
         $this->form_validation->set_rules('username', 'Usuario', 'required|valid_email', array('required' => 'El Campo Usuario es requerido', 'valid_email'=> 'El Campo Usuario de ser su correo electronico'));
         $this->form_validation->set_rules('password', 'Clave', 'required',array('required' => 'El Campo Clave es requerido'));
+        $this->form_validation->set_rules('numero_meson', 'Numero de meson', 'trim|required|xss_clean|numeric|min_length[1]|max_length[3]',array('required' => 'El Numero de meson es requerido','numeric' => 'El Numero de meson solo permite numeros','min_length' => 'El Numero de meson debe indicar al menos 1 digitos','max_length' => 'El Numero de meson debe indicar m&aacute;ximo 2 digitos'));
 
         //validaci�n del captcha
         //$this->form_validation->set_rules('g-recaptcha-response', '', 'required',array('required' => 'El Campo capcha es requerido'));
@@ -89,8 +90,9 @@ class User extends CI_Controller {
             // set variables from the form
             $username = $this->input->post('username');
             $password = $this->input->post('password');
+            $meson = $this->input->post('numero_meson');
             
-            if ($this->user_model->resolve_user_login($username, $password)) {
+            if ($this->user_model->resolve_user_login($username, $password,$meson)) {
                 
                //consultamos los datos del usuario
                 $user_id = $this->user_model->get_user_id_from_username($username);
