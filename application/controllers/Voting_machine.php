@@ -56,23 +56,31 @@ class Voting_machine extends CI_Controller
             
             $campos= explode(".",$centrovotacionmesa);
             
-            $centrovotacion=$campos[0];
-            $mesa=$campos[1];
-            
-           
-            $result=$this->MaquinaVotacion_model->getDetailVotingMachine($centrovotacion,$mesa);
-            $dataVotingMachine=array('consulta'=>$result);
-            
-            
-            if($result != null){
-                $this->load->view('templates/header');
-                $this->load->view('templates/navigation');
-                $this->load->view('test/detail_voting_machine',$dataVotingMachine);
+            if(count($campos)==3){
+                $centrovotacion=$campos[0];
+                $mesa=$campos[1];
+                
+               
+                $result=$this->MaquinaVotacion_model->getDetailVotingMachine($centrovotacion,$mesa);
+                $dataVotingMachine=array('consulta'=>$result);
+                
+                
+                if($result != null){
+                    $this->load->view('templates/header');
+                    $this->load->view('templates/navigation');
+                    $this->load->view('test/detail_voting_machine',$dataVotingMachine);
+                }else{
+                    $data->error = "No se encontr&oacute; el n&uacute;mero consultado.";
+                    $this->load->view('templates/header');
+                    $this->load->view('templates/navigation',$data);
+                    $this->load->view('test/search_voting_machine');
+                    $this->load->view('templates/footer');
+                }
             }else{
-                $data->error = "No se encontr&oacute; el n&uacute;mero consultado.";
+                $data->error = "No se encontr&oacute; el n&uacute;mero consultado. Formato Invalido";
                 $this->load->view('templates/header');
                 $this->load->view('templates/navigation',$data);
-                $this->load->view('test/voting_machine');
+                $this->load->view('test/search_voting_machine');
                 $this->load->view('templates/footer');
             }
             

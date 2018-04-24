@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             
 
         ?>
-    	<?= form_open('/voting_machine/consultar') ?>
+    	<?= form_open('/Voting_machine/consultar') ?>
                 <div class="large-4 medium-4 columns">
                     <label><span style="color:red;">*</span> N&uacute;mero de meson</label>
                     <input type="text" maxlength="3" placeholder="" name="numero_meson" id="numero_meson" value="<?php echo $mostrar_numero_meson; ?>"  />
