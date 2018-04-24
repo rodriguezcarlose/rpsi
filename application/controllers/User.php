@@ -67,7 +67,7 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('password', 'Clave', 'required',array('required' => 'El Campo Clave es requerido'));
 
         //validaci�n del captcha
-        $this->form_validation->set_rules('g-recaptcha-response', '', 'required',array('required' => 'El Campo capcha es requerido'));
+        //$this->form_validation->set_rules('g-recaptcha-response', '', 'required',array('required' => 'El Campo capcha es requerido'));
         
         // Eliminamos la session en caso que se encuentre activa
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {

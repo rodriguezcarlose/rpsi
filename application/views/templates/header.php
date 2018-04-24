@@ -10,7 +10,7 @@
                     <link href="<?= base_url()?>Content/excle/excle.autocomplete.css" rel="stylesheet" />
                     <link href="<?= base_url()?>Content/excle/excle.autocomplete.multiple.css" rel="stylesheet" />
                     <link href="<?= base_url()?>Content/Site.css" rel="stylesheet"/>
-                    <script src='https://www.google.com/recaptcha/api.js'></script>
+                   <!--  <script src='https://www.google.com/recaptcha/api.js'></script> -->
                     
                 
         </head>
