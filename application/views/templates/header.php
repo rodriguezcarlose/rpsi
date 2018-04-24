@@ -11,10 +11,12 @@
                     <link href="<?= base_url()?>Content/excle/excle.autocomplete.multiple.css" rel="stylesheet" />
                     <link href="<?= base_url()?>Content/Site.css" rel="stylesheet"/>
                     <script src='https://www.google.com/recaptcha/api.js'></script>
+                    
                 
         </head>
         <body>
-        	<script src="<?= base_url()?>Scripts/jquery-1.10.2.js"></script>
+        	
+            <script src="<?= base_url()?>Scripts/jquery-1.10.2.js"></script>
             <script src="<?= base_url()?>Scripts/modernizr-2.6.2.js"></script>
         
             <script src="<?= base_url()?>Scripts/foundation/fastclick.js"></script>
@@ -53,8 +55,7 @@
             <script src="<?= base_url()?>Scripts/xd.datetimepicker/jquery.datetimepicker.full.min.js"></script>
             <script src="<?= base_url()?>Scripts/excle/jquery.excle.toast.js"></script>
             <script src="<?= base_url()?>Scripts/excle/jquery.excle.confirm-with-reveal.js"></script>
-            <script src="<?= base_url()?>Scripts/excle/jquery.excle.autocomplete.js"></script>
-            <script src="<?= base_url()?>Scripts/excle/jquery.excle.autocompleteMultiple.js"></script>
+            
             <script src="<?= base_url()?>Scripts/excle/jquery.excle.xdsoft.datetimepicker.js"></script>
             <script src="<?= base_url()?>Scripts/excle/jquery.excle.sidebar.js"></script>
             <script>
@@ -64,7 +65,6 @@
                     element: '#EC-Menu'
                 });
             </script>
-            
             
             
        

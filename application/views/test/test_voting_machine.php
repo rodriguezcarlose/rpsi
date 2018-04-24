@@ -6,24 +6,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
    <div class="container">
     <div class="row">
     	<h3>M&aacute;quina de Votaci&oacute;n</h3>
-        
-    	<?= form_open('/voting_machine/') ?>
-
+         <?php 
+                $fila=$consulta->result(); 
+                $centrovotacion= $fila[0]->codigo_centrovotacion .'-'. $fila[0]->centro_votacion 
+                
+                ?>
+    	<?= form_open('/voting_machine/procesar') ?>
+				<input type="hidden" value="<?= $fila[0]->id; ?>" id="id" name = "id">
+				<input type="hidden" value="<?= $fila[0]->estatus; ?>" id="estatusmv" name = "estatusmv">
+				<input type="hidden" value="<?= $fila[0]->id_estatus_maquina; ?>" id="idestatusmaquina" name = "idestatusmaquina">
                 <div class="large-12 medium-4 columns">
                     <label>Centro de votaci&oacute;n</label>
-                    <input type="text" placeholder="" name="centrovotacion" id="centrovotacion" disabled value=""/>
+                    <input type="text" name="centrovotacion" id="centrovotacion" disabled value="<?= $centrovotacion ?>"/>
                 </div>
                 <div class="large-4 medium-4 columns">
                     <label>Modelo M&aacute;quina Votaci&oacute;n</label>
-                    <input type="text" placeholder="" name="modelomaquina" id="modelomaquina" disabled value=""/>
+                    <input type="text" name="modelomaquina" id="modelomaquina" disabled value="<?= $fila[0]->modelo_maquina; ?>"/>
                 </div>
                <div class="large-4 medium-4 columns">
                     <label>N&uacute;mero de mesa</label>
-                    <input type="text" placeholder="" name="mesa" id="mesa" disabled value=""/>
+                    <input type="text" name="mesa" id="mesa" disabled value="<?= $fila[0]->mesa; ?>"/>
                 </div> 
                <div class="large-4 medium-4 columns">
                     <label>Estatus</label>
-                    <input type="text" placeholder="" name="estatus" id="estatus" disabled value=""/>
+                    <input type="text" name="estatus" id="estatus" disabled value="<?= $fila[0]->estatus; ?>"/>
                 </div> 
                <div class="large-6 medium-4 columns">
                     <label>C&oacute;digo Validaci&oacute;n</label>
@@ -32,53 +38,50 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                <div class="large-6 medium-4 columns">
                     <label>Medio de Transmisi&oacute;n</label>
 					<select name="medio" id="medio">
-                        <option value="husker">Husker</option>
-                        <option value="starbuck">Starbuck</option>
-                        <option value="hotdog">Hot Dog</option>
-                        <option value="apollo">Apollo</option>
+						<option value="Seleccione">Seleccione</option>
+                        <option value="DIAL UP">DIAL UP</option>
+                        <option value="CDMA1x">CDMA1x</option>
+                        <option value="VSAT">VSAT</option>
+                        <option value="Manual">Manual</option>
                     </select>
                 </div> 
 
         <br>
         <h3>Registrar Errores</h3>
-			<div class="small-4 columns">
-                <label class="inline">Buscar Error</label>
+			<div class="large-12 medium-4 columns">
+                <label>Buscar Error</label>
+               	<select data-autocomplete=""  multiple="" name="error[]" id = "error">
+               		<option value="">Buscar errores</option>
+               		<?php 
+               		   foreach ($errormv->result() as $error){
+               		?>
+               		<option value="<?= $error->id?>"><?= $error->descripcion?></option>
+               		
+               		<?php
+               		    
+               		}
+               		
+               		?>
+               	</select>
+
             </div>
-            <div class="large-6 medium-4 columns">
-                <input type="text" placeholder="" name="error" id="error" value=""/>
-            </div>
-            <div class="small-2 columns">
-                <button class="button postfix">Buscar</button>
-            </div>
-            
         	<br>    
-            <table id="dataTable">
-                <thead>
-                    <tr>
-                        <td>Proyecto</td>
-                        <td>Gerencia</td>
-                        <td>Rol</td>
-                        <td>Banco</td>
-                        <td>Nro. Cuenta</td>
-                        <td>Fecha</td>
-                        <td>Estatus</td>
-                        <td>Acci&oacute;n</td>
-                    </tr>
-                </thead>
-     			<tbody>                           
-                    <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>                                                
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                    </tr>
-             
-     			</tbody>
-    		</table>
+        	<h3>Tipo Reemplazo</h3>
+			<div class="large-6 medium-4 columns">
+                <label>Tipo Reemplazo</label>
+               	<select name="tiporeemplazo" id ="tiporeemplazo">
+               		<option value="">Seleccione</option>
+               		<?php 
+               		foreach ($tiporeemplazo->result() as $tipor){
+               		?>
+               		<option value="<?= $tipor->id?>"><?= $tipor->descripcion?></option>
+               		<?php
+               		}
+               		?>
+               	</select>
+            </div>
+        	<br> 
+
     		
             <div class="small-12 column text-right buttonPanel">
                 <input id="btnCloseModalEditor" class="button small right alert" value="Cancelar" type="button">

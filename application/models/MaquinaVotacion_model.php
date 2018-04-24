@@ -157,6 +157,7 @@ class MaquinaVotacion_model extends CI_Model
                                         	mv.centro_votacion,
                                         	mv.mesa,
                                         	mv.modelo_maquina,
+                                            mv.id_estatus_maquina,
                                         	em.descripcion estatus
                                         FROM maquina_votacion mv, estatus_maquina em
                                         WHERE mv.id_estatus_maquina=em.id
@@ -187,6 +188,7 @@ class MaquinaVotacion_model extends CI_Model
                                         	mv.centro_votacion,
                                         	mv.mesa,
                                         	mv.modelo_maquina,
+                                            mv.id_estatus_maquina,
                                         	em.descripcion estatus
                                         FROM maquina_votacion mv, estatus_maquina em
                                         WHERE mv.id_estatus_maquina=em.id
@@ -200,6 +202,30 @@ class MaquinaVotacion_model extends CI_Model
             
             return null;
         }
+        
+    }
+    
+    public function getCodigoByStatusId($estatus,$id){
+        
+        switch ($estatus) {
+            case "SELECCIONADA":
+               $this->db->select("codigo_instalacion");
+               break;
+            case "INSTALADA":
+                $this->db->select("codigo_apertura");
+                break;
+            case "APERTURADA":
+                $this->db->select("codigo_cierre");
+                break;
+            case "CERRADA":
+                $this->db->select("codigo_transmision");
+                break;
+                
+        }
+        
+        $this->db->where("id",$id);
+        $result =  $this->db->get("maquina_votacion")->row();
+        return $result;
         
     }
     
