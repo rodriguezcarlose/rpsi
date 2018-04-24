@@ -3,12 +3,13 @@
 class Proceso_model extends CI_Model
 {
     
-    public function insertproceso($dataProceso, $dataError, $proxestatus){
+    public function insertproceso($dataProceso, $dataError, $proxestatus,$medioTramsmision){
         
         $this->db->trans_start();
         //cambiamos el estatus de la maquina al proximo estatus
         
         $this->db->set("id_estatus_maquina",$proxestatus);
+        $this->db->set("medio_transmision",$medioTramsmision);
         $this->db->where("id",$dataProceso["id_maquina_votacion"]);
         $this->db->update("maquina_votacion");
         

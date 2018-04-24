@@ -22,20 +22,31 @@ class Voting_machine extends CI_Controller
         $this->load->model('MaquinaVotacion_model');
         $this->load->model('Proceso_model');
         $this->load->model('Fase_model');
-        
-      
-
+        $this->load->model('UsuarioMaquina_model');
     }
 
     // Show login page
     public function index()
     {
         $data = new stdClass();
-        $data = $this->data;
-        $this->load->view('templates/header');
-        $this->load->view('templates/navigation',$data);
-        $this->load->view('test/search_voting_machine');
-        $this->load->view('templates/footer');
+        
+        if ( $this->UsuarioMaquina_model->getCountUsuario($_SESSION['id']) > 0){
+            $idmaquina = $this->UsuarioMaquina_model->getMaquinaIDByUser($_SESSION['id']);
+            $result = $this->MaquinaVotacion_model->getDetailVotingMachinebById($idmaquina);
+            $dataVotingMachine=array('consulta'=>$result);
+            $data->success = "Usted Ya tiene seleccionada una M&aacute;quina previamente. Presione Aceptar para continuar, o cancelar para seleccionar otra M&aacute;quina.";
+            if($result != null){
+                $this->load->view('templates/header');
+                $this->load->view('templates/navigation',$data);
+                $this->load->view('test/detail_voting_machine',$dataVotingMachine);
+            }
+        }else{
+            $data = $this->data;
+            $this->load->view('templates/header');
+            $this->load->view('templates/navigation',$data);
+            $this->load->view('test/search_voting_machine');
+            $this->load->view('templates/footer');
+        }
     }
 
     public function consultar()
@@ -93,19 +104,35 @@ class Voting_machine extends CI_Controller
         
         $idmaquina=$this->input->post('id');
         
-       
-        //$result=$this->MaquinaVotacion_model->getDetailTestVotingMachine($idmaquina);
         $data->consulta = $this->MaquinaVotacion_model->getDetailTestVotingMachine($idmaquina);
         $data->errormv = $this->Error_model->getError();
         $data->tiporeemplazo = $this->TipoReemplazo_model->getTipoReemplazo();
-       // $dataVotingMachine=array('consulta'=>$result);
-        //array_push($dataVotingMachine,$this->Error_model->getError());
-        //$dataVotingMachine->error = $this->Error_model->getError();
-    
-        $this->load->view('templates/header');
-        $this->load->view('templates/navigation');
-        $this->load->view('test/test_voting_machine',$data);
-        $this->load->view('templates/footer');
+        
+        $fila=$data->consulta->result();
+        $usuariomaquina = array();
+        $usuariomaquina["id_usuario"] = $_SESSION['id'];
+        $usuariomaquina["id_maquina"] = $fila[0]->id;
+        
+        
+        if ($this->UsuarioMaquina_model->getmaquina($usuariomaquina) > 0){
+            $data = new stdClass();
+            $data->error = "la m&aacute;quina ya se ecuentra selccionada por otro usuario.";
+            $this->data = $data;
+            $this->index();
+            
+        }else{
+            
+            if ($this->UsuarioMaquina_model->getusuarioMaquina($usuariomaquina) == 0){
+                //marcamos la mesa como selccionada para el usuario
+                $this->UsuarioMaquina_model->selccionarMesa($usuariomaquina);
+            }
+            $this->load->view('templates/header');
+            $this->load->view('templates/navigation');
+            $this->load->view('test/test_voting_machine',$data);
+            $this->load->view('templates/footer');
+        }
+        
+       
     }
     public function resettest()
     {
@@ -220,64 +247,75 @@ class Voting_machine extends CI_Controller
             $codigo = $this->MaquinaVotacion_model->getCodigoByStatusId($this->input->post('estatusmv'),$this->input->post('id'));
             $proxEstatus = "";
             $idproxEstatus = $this->input->post('idestatusmaquina');
+            $fase = 0;
             switch ($this->input->post('estatusmv')) {
                 case "SELECCIONADA":
                     $codigo = $codigo->codigo_instalacion;
                     $proxEstatus = "Instalaci&oacute;n";
                     $idproxEstatus = 2;
+                    $fase = 1;
                     break;
                 case "INSTALADA":
                     $codigo = $codigo->codigo_apertura;
                     $proxEstatus = "Apertura";
                     $idproxEstatus = 3;
+                    $fase = 2;
                     break;
                 case "APERTURADA":
                     $codigo = $codigo->codigo_cierre;
                     $proxEstatus = "Votacion";
                     $idproxEstatus = 4;
+                    $fase = 3;
                     break;
                 case "VOTACION":
                     $codigo = $codigo->codigo_cierre;
                     $proxEstatus = "Cierre";
                     $idproxEstatus = 5;
+                    $fase = 4;
                     break;
                 case "CERRADA":
                     $codigo = $codigo->codigo_transmision;
                     $proxEstatus = "Transmisi&oacute;n";
                     $idproxEstatus = 6;
+                    $fase = 5;
                     break;
                     
             }
             //validamos el c�digo de Validaci�n
             // Si no seleciono un error el c�digo de validaci�n es requerido
-            if($cantError == 0 && $this->input->post('estatusmv') !==4 && $this->form_validation->required($this->input->post('codigo')) == false){
-                $data->error = "El C�digo Validaci�n es requerido";
+            if($cantError == 0 && $this->input->post('idestatusmaquina') !== "3" && $this->form_validation->required($this->input->post('codigo')) == false){
+                $data->error = "El C&oacute;digo Validac&oacute;n es requerido";
                 $this->load->view('templates/header');
                 $this->load->view('templates/navigation',$data);
                 $this->load->view('test/test_voting_machine',$data);
                 $this->load->view('templates/footer');
                 //si no selecciono error y el codigo de validaci�n no pertenece al proximo estatus
-            }else if($cantError == 0 && $this->input->post('estatusmv') !==4 && $codigo !== $this->input->post('codigo')){
+            }else if($cantError == 0 && $this->input->post('idestatusmaquina') !== "3" && $codigo !== $this->input->post('codigo')){
                 $data->error = "El c&oacute;digo no es v&aacute;lido, se esperra el c&oacute;digo de ".$proxEstatus.".";
                 $this->load->view('templates/header');
                 $this->load->view('templates/navigation',$data);
                 $this->load->view('test/test_voting_machine',$data);
                 $this->load->view('templates/footer');
                 //si selecciono un error y coloco un coigo de estatus invalido.
-            }else if ($cantError > 0 && $this->input->post('estatusmv') !==4 && $this->input->post('codigo') !== "" && $codigo !== $this->input->post('codigo')){
+            }else if ($cantError > 0 && $this->input->post('idestatusmaquina') !== "3" && $this->input->post('codigo') !== "" && $codigo !== $this->input->post('codigo')){
                 $data->error = "El c&oacute;digo no es v&aacute;lido, se esperra el c&oacute;digo de ".$proxEstatus.".";
                 $this->load->view('templates/header');
                 $this->load->view('templates/navigation',$data);
                 $this->load->view('test/test_voting_machine',$data);
                 $this->load->view('templates/footer');
+            }else if($this->input->post('idestatusmaquina') == "5" && $this->form_validation->required($this->input->post('medio')) == false){
+                $data->error = "El Medio de  Transmisi&oacute;n es requerido.";
+                $this->load->view('templates/header');
+                $this->load->view('templates/navigation',$data);
+                $this->load->view('test/test_voting_machine',$data);
+                $this->load->view('templates/footer');
             }else{
-                //Proceso_model
                 $proceso = array();
                 $errorselect = array();
                 $proceso = [
                     "id_maquina_votacion"=>$this->input->post("id"),
                     "id_usuario"=>$_SESSION['id'],
-                    "id_fase"=>$idproxEstatus,
+                    "id_fase"=>$fase,
                     "fechainicio"=>date('Y-m-d H:i:s'),
                     "fechafin"=>date('Y-m-d H:i:s'),
                 ];
@@ -314,12 +352,19 @@ class Voting_machine extends CI_Controller
                     }
                    
                 }
-                if($codigo === $this->input->post('codigo')){
-                    $this->Proceso_model->insertproceso($proceso,$procesoError,$idproxEstatus);
-                    
+                if($codigo === $this->input->post('codigo') || $this->input->post('idestatusmaquina') === "3") {
+                    $this->Proceso_model->insertproceso($proceso,$procesoError,$idproxEstatus,$this->input->post('medio'));
                 }else{
-                    $this->Proceso_model->insertproceso($proceso,$procesoError,$this->input->post('idestatusmaquina'));
+                    $this->Proceso_model->insertproceso($proceso,$procesoError,$this->input->post('idestatusmaquina'),$this->input->post('medio'));
                 }
+                //des selecionamos la máquina del usurio
+                
+                $fila=$data->consulta->result();
+                $usuariomaquina = array();
+                $usuariomaquina["id_usuario"] = $_SESSION['id'];
+                $usuariomaquina["id_maquina"] = $this->input->post('id');
+                $this->UsuarioMaquina_model->desSelccionarMesa($usuariomaquina);
+                
                 $data = new stdClass();
                 $data->success = "Se ha registrado con &eacute;xito el proceso de la m&aacute;quina.";
                 $this->data = $data;
@@ -327,6 +372,15 @@ class Voting_machine extends CI_Controller
                 
             }
         }
+    }
+
+    public function cancelar() {
+        $usuariomaquina = array();
+        $usuariomaquina["id_usuario"] = $_SESSION['id'];
+        $usuariomaquina["id_maquina"] = $this->input->post('id');
+        $this->UsuarioMaquina_model->desSelccionarMesa($usuariomaquina);
+        //data->success = "Se ha registrado con &eacute;xito el proceso de la m&aacute;quina.";
+        $this->index();
     }
 }
 

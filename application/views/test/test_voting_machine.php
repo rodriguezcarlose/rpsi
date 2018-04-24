@@ -33,16 +33,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div> 
                <div class="large-6 medium-4 columns">
                     <label>C&oacute;digo Validaci&oacute;n</label>
+                    <?php if( $fila[0]->id_estatus_maquina == 3){?>
+                    <input type="text" placeholder="" name="codigo" id="codigo" disabled value="" />
+                    <?php }else{?>
                     <input type="text" placeholder="" name="codigo" id="codigo" value=""/>
+                    <?php }?>
                 </div> 
                <div class="large-6 medium-4 columns">
                     <label>Medio de Transmisi&oacute;n</label>
+                    <?php if( $fila[0]->id_estatus_maquina !== "5"){?>
+                   		<select name="medio" id="medio" disabled>
+                   	<?php }else{?>
+                  	
 					<select name="medio" id="medio">
-						<option value="Seleccione">Seleccione</option>
+						<option value="">Seleccione</option>
                         <option value="DIAL UP">DIAL UP</option>
                         <option value="CDMA1x">CDMA1x</option>
                         <option value="VSAT">VSAT</option>
                         <option value="Manual">Manual</option>
+                   	<?php }?>
                     </select>
                 </div> 
 
@@ -84,7 +93,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     		
             <div class="small-12 column text-right buttonPanel">
-                <input id="btnCloseModalEditor" class="button small right alert" value="Cancelar" type="button">
+                <input id="btnCloseModalEditor" class="button small right alert" value="Cancelar" type="submit" onclick="this.form.action = '/voting_machine/cancelar'">
                 <input id="btnEnviar" class="button small right" value="Aceptar" type="submit">
             </div>
         <?= form_close() ?>            

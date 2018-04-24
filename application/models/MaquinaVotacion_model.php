@@ -175,6 +175,16 @@ class MaquinaVotacion_model extends CI_Model
         
     }
     
+    public function getDetailVotingMachinebById($id){
+        
+        $this->db->select('mv.id, mv.codigo_estado, mv.estado, mv.codigo_municipio, mv.municipio, mv.codigo_parroquia, mv.parroquia, 
+                            mv.codigo_centrovotacion, mv.centro_votacion, mv.mesa, mv.modelo_maquina, mv.id_estatus_maquina, em.descripcion estatus');
+        $this->db->from('maquina_votacion mv');
+        $this->db->join('estatus_maquina em', 'mv.id_estatus_maquina=em.id', 'inner');
+        $this->db->where('mv.id', $id);
+        return $query = $this->db->get();
+    }
+    
     public function getDetailTestVotingMachine($id){
         
         $result=$this->db->query("SELECT 	mv.id,
@@ -239,4 +249,18 @@ class MaquinaVotacion_model extends CI_Model
             return true;
         }        
     }
+    
+    public function setMeson($id, $meson) {
+        $this->db->set("numero_meson",$meson);
+        $this->db->where("id",$id);
+        $this->db->update("maquina_votacion");
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return true;
+        }    
+    
+    }
+    
+    
 }

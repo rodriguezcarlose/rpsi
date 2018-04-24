@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
 
             <div class="small-12 column text-right buttonPanel">
-                <input id="btnCloseModalEditor" class="button small right alert" value="Cancelar" type="button">
+                <!-- input id="btnCloseModalEditor" class="button small right alert" value="Cancelar" type="submit" onclick="this.form.action = '<?=base_url()?>index.php/voting_machine/cancelar'"-->
                 <input id="btnEnviar" class="button small right" value="Consultar" type="submit">
             </div>
         <?= form_close() ?>
