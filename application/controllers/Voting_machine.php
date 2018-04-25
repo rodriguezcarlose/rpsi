@@ -312,7 +312,7 @@ class Voting_machine extends CI_Controller
                     break;
                 case "APERTURADA":
                     $codigo = $codigo->codigo_cierre;
-                    $proxEstatus = "Votacion";
+                    $proxEstatus = "Votaci&oacute;n";
                     $idproxEstatus = 4;
                     $fase = 3;
                     break;

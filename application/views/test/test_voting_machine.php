@@ -5,12 +5,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<br>
    <div class="container">
     <div class="row">
-    	<h3>M&aacute;quina de Votaci&oacute;n</h3>
-         <?php 
+    	<?php 
                 $fila=$consulta->result(); 
-                $centrovotacion= $fila[0]->codigo_centrovotacion .'-'. $fila[0]->centro_votacion 
+                $centrovotacion= $fila[0]->codigo_centrovotacion .'-'. $fila[0]->centro_votacion;
                 
-                ?>
+                switch ($fila[0]->estatus) {
+                    case "SELECCIONADA":
+                        $proxEstatus = "Instalaci&oacute;n";
+                        break;
+                    case "INSTALADA":
+                        $proxEstatus = "Apertura";
+                        break;
+                    case "APERTURADA":
+                        $proxEstatus = "Votaci&oacute;n";
+                        break;
+                    case "VOTACION":
+                        $proxEstatus = "Cierre";
+                        break;
+                    case "CERRADA":
+                        $proxEstatus = "Transmisi&oacute;n";
+                        break;
+                }
+                
+        ?>
+        
+    	<h3>M&aacute;quina de Votaci&oacute;n. Fase <?=$proxEstatus?></h3>
     	<?= form_open('/voting_machine/procesar') ?>
 				<input type="hidden" value="<?= $fila[0]->id; ?>" id="id" name = "id">
 				<input type="hidden" value="<?= $fila[0]->estatus; ?>" id="estatusmv" name = "estatusmv">
@@ -28,7 +47,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <input type="text" name="mesa" id="mesa" disabled value="<?= $fila[0]->mesa; ?>"/>
                 </div> 
                <div class="large-4 medium-4 columns">
-                    <label>Estatus</label>
+                    <label>Estatus Actual Completado</label>
                     <input type="text" name="estatus" id="estatus" disabled value="<?= $fila[0]->estatus; ?>"/>
                 </div> 
                <div class="large-6 medium-4 columns">
