@@ -145,8 +145,7 @@ class LoadCV extends CI_Controller
                         "codigo_cierre" => $datafile[11],
                         "codigo_transmision" => $datafile[12],
                         "modelo_maquina" => $datafile[13],
-                        "id_estatus_maquina" => $datafile[14],
-                        "numero_meson" => $datafile[15]
+                        "id_estatus_maquina" => $datafile[14]
                     );
                     
                     // agregamos el registro en el arreglo

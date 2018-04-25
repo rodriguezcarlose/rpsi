@@ -70,7 +70,6 @@
                                 <td>Cod. Transmici&oacute;n</td>
                                 <td>Modelo M&aacute;quina</td>
                                 <td>Estatus M&aacute;quina</td>
-                                <td>N&uacute;mero Meson</td>
                   			</tr>
                 		</thead>
                 		<tbody>
@@ -127,9 +126,7 @@
                                     <td>
                                     	<?= $data->id_estatus_maquina ?>
                                     </td> 
-                                    <td>
-                                    	<?= $data->numero_meson ?>
-                                    </td> 
+
                                 </tr>
                                 
                         <?php } ?>
