@@ -211,7 +211,7 @@ class Voting_machine extends CI_Controller
             if ($result != null) {
                 $dataVotingMachine = $result->result();
                 $dataVotingMachine[0]->id;
-                $result = $this->MaquinaVotacion_model->updateStatusVotingMachine($dataVotingMachine[0]->id, $seleccionada);
+                $result = $this->MaquinaVotacion_model->resetVotingMachine($dataVotingMachine[0]->id, $seleccionada);
                 
                 if ($result) {
                     $data->success = "Reiniciada Exitosamente";
@@ -262,23 +262,24 @@ class Voting_machine extends CI_Controller
         $data->errormv = $this->Error_model->getError();
         $data->tiporeemplazo = $this->TipoReemplazo_model->getTipoReemplazo();
         
+        if (is_array($this->input->post('error'))){
         // si se selecciono un error de la lista validamos el tipo de error
-        $cantError = count($this->input->post('error'));
-        if ($cantError > 0) {
-            foreach ($this->input->post('error') as $error) {
-                array_push($errosrselect, $error);
-            }
-            $result = $this->Error_model->getTipoErrorById($errosrselect);
-            
-            foreach ($result->result() as $tipoErrorSelect) {
-                // si el alguno de los tipos de error es 2 validamos que haya selecconado un tipo de reemplazos
-                if ($tipoErrorSelect->id_tipo_error == "2") {
-                    $reemplazo = true;
-                    break;
+            $cantError = count($this->input->post('error'));
+            if ($cantError > 0) {
+                foreach ($this->input->post('error') as $error) {
+                    array_push($errosrselect, $error);
+                }
+                $result = $this->Error_model->getTipoErrorById($errosrselect);
+                
+                foreach ($result->result() as $tipoErrorSelect) {
+                    // si el alguno de los tipos de error es 2 validamos que haya selecconado un tipo de reemplazos
+                    if ($tipoErrorSelect->id_tipo_error == "2") {
+                        $reemplazo = true;
+                        break;
+                    }
                 }
             }
         }
-        
         // si el tipo de error seleccionado requiere reemplazo validamos que haya selecionado uno.
         if ($reemplazo) {
             if ($this->form_validation->required($this->input->post('tiporeemplazo')) == false) {
