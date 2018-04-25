@@ -40,7 +40,7 @@
                                     echo '</li>';
                                 }
                                 
-                                echo '<li class="has-dropdown"><a href="#">'.$valor->nombre.'</a>';
+                                echo '<li class="has-dropdown"><a href="'.base_url().$valor->url.'">'.$valor->nombre.'</a>';
                                 echo '<ul class="dropdown">';
                                 $finMenu = true;
                             }else{
