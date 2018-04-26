@@ -32,7 +32,7 @@ class Report extends CI_Controller
                     // Podemos aqui crear un mensaje antes de redirigir que informe
                     redirect(base_url());
                 }
-            }            // Si no se llega desde un enlace se redirecciona al inicio
+            } // Si no se llega desde un enlace se redirecciona al inicio
             else {
                 // Podemos aqui crear un mensaje antes de redirigir que informe
                 redirect(base_url());
@@ -45,40 +45,42 @@ class Report extends CI_Controller
     {
         $data = new stdClass();
         
-
         $resultCountModeloEstatus = $this->MaquinaVotacion_model->getCountModeloEstatus();
         $resultCountMedioTransmision = $this->MaquinaVotacion_model->getCountMedioTransmision();
         $resultCountTipReemplazo = $this->MaquinaVotacion_model->getCountTipReemplazo();
         $mv = $this->MaquinaVotacion_model->getModelosMV();
-        //echo count($mv->result());
+        // echo count($mv->result());
         $reports = array();
         
-        foreach ($mv->result() as $modelomv){
+        foreach ($mv->result() as $modelomv) {
             $report = array();
             $report["modelo_maquina"] = $modelomv->modelo_maquina;
-            foreach ($resultCountModeloEstatus->result() as $resultCountModelo){
-                if($resultCountModelo->modelo_maquina == $modelomv->modelo_maquina){
-                    $report[$resultCountModelo->estatus] = $resultCountModelo->cantidad;
+            if (count($resultCountModeloEstatus) > 0) {
+                foreach ($resultCountModeloEstatus->result() as $resultCountModelo) {
+                    if ($resultCountModelo->modelo_maquina == $modelomv->modelo_maquina) {
+                        $report[$resultCountModelo->estatus] = $resultCountModelo->cantidad;
+                    }
                 }
             }
             
-            
-            foreach ($resultCountMedioTransmision->result() as $resultCountMedio){
-                if($resultCountMedio->modelo_maquina == $modelomv->modelo_maquina){
-                    $report[$resultCountMedio->medio_transmision] = $resultCountMedio->cantidad;
+            if (count($resultCountMedioTransmision) > 0) {
+                foreach ($resultCountMedioTransmision->result() as $resultCountMedio) {
+                    if ($resultCountMedio->modelo_maquina == $modelomv->modelo_maquina) {
+                        $report[$resultCountMedio->medio_transmision] = $resultCountMedio->cantidad;
+                    }
                 }
-                
-            }
-            foreach ($resultCountTipReemplazo->result() as $resultCountTipo){
-                if($resultCountTipo->modelo_maquina == $modelomv->modelo_maquina){
-                    $report[$resultCountTipo->descripcion] = $resultCountTipo->cantidad;
-                }
-                
             }
             
-            array_push($reports,$report);
+            if (count($resultCountTipReemplazo) > 0) {
+                foreach ($resultCountTipReemplazo->result() as $resultCountTipo) {
+                    if ($resultCountTipo->modelo_maquina == $modelomv->modelo_maquina) {
+                        $report[$resultCountTipo->descripcion] = $resultCountTipo->cantidad;
+                    }
+                }
+            }
+            
+            array_push($reports, $report);
         }
-        
         
         $data->reports = $reports;
         
