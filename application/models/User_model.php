@@ -30,18 +30,44 @@ class User_model extends CI_Model {
      * @param mixed $password
      * @return bool true on success, false on failure
      */
-  /*  public function create_user($username, $email, $password) {
+    public function create_user($usuario, $empleado) {
         
-        $data = array(
-            'username'   => $username,
-            'email'      => $email,
-            'password'   => $this->hash_password($password),
-            'created_at' => date('Y-m-j H:i:s'),
-        );
+        //validamos si ya existe un empleado con la misma cedula
+        $this->db->where("documento_identidad", $empleado["documento_identidad"]);
+        if( $this->db->count_all_results('empleado') > 0){
+            return 1;
+        }
         
-        return $this->db->insert('users', $data);
+        //validamos si ya existe un usuario con el mimso correo
+        $this->db->where("correo", $usuario["correo"]);
+        if( $this->db->count_all_results('usuario') > 0)
+            return 2;
+            
+            $this->db->trans_start();
+            //$this->db->insert_batch("empleado", $empleado);
+            $this->db->insert('empleado', $empleado);
+            
+            $this->db->select("id");
+            $this->db->where("documento_identidad",$empleado["documento_identidad"]);
+            $result = $this->db->get("empleado");
+            log_message('info', 'Usermanagement_model|insertPaymentIndividual: '.$sql = $this->db->last_query());
+            foreach ($result->result() as $idEmpleado){
+                $usuario["id_empleado"] = $idEmpleado->id;
+            }
+            $usuario["clave"] = password_hash("Abcd1234++", PASSWORD_BCRYPT);
+            $this->db->insert('usuario', $usuario);
+            
+            $this->db->trans_complete();
+            
+            log_message('info', 'Usermanagement_model|insertPaymentIndividual: '.$sql = $this->db->last_query());
+            
+            if ($this->db->trans_status() === FALSE){
+                return 3;
+            }else{
+                return 0;
+            }
         
-    }*/
+    }
     
     /**
      * resolve_user_login function.
@@ -56,6 +82,7 @@ class User_model extends CI_Model {
         $this->db->select('clave');
         $this->db->from('usuario');
         $this->db->where('correo', $email);
+        $this->db->where_in('estatus',array('nuevo', 'activo'));
         $hash = $this->db->get()->row('clave');
         
         if ($this->verify_password_hash($clave, $hash)){
@@ -114,6 +141,26 @@ class User_model extends CI_Model {
         
     }
     
+    public function get_user_from_documento($document) {
+        
+        /* $this->db->from('usuario');
+         $this->db->where('id', $user_id);
+         return $this->db->get()->row();*/
+        log_message('info', 'User_model|get_user_from_documento inicio ');
+        $this->db->select('u.id as id_usuario, u.correo, u.estatus,e.id as id_empleado, e.nombre, e.apellido, e.id_cargo, e.documento_identidad, e.id_tipo_documento,u.id_rol');
+        $this->db->from('empleado e');
+        $this->db->join('usuario u', 'u.id_empleado = e.id');
+        $this->db->where('e.documento_identidad',$document);
+        $this->db->where_in('u.estatus',array('nuevo', 'activo'));
+        
+        
+        $query = $this->db->get()->row();
+        log_message('info', 'User_model|get_user_from_documento '.$sql = $this->db->last_query());
+        log_message('info', 'User_model|get_user_from_documento fin ');
+        return $query;
+        
+    }
+    
     /**
      * hash_password function.
      *
@@ -138,6 +185,68 @@ class User_model extends CI_Model {
     private function verify_password_hash($password, $hash) {
         
         return password_verify($password, $hash);
+        
+    }
+    
+    
+    public function edit_user($user, $employee, $delecte, $reset){
+        
+        
+        //$this->db->trans_start();
+        //$this->db->trans_complete();
+        $this->db->trans_start();
+        if ($delecte){
+            $this->db->set("estatus", "eliminado");
+        }else if ($reset){
+            $this->db->set("clave", password_hash("Abcd1234++", PASSWORD_BCRYPT));
+            $this->db->set("estatus", "nuevo");
+        }
+            
+            //usuario
+        if ($reset){
+            $this->db->set("clave", password_hash("Abcd1234++", PASSWORD_BCRYPT));
+            $this->db->set("estatus", "nuevo");
+        }
+           
+            $this->db->set("correo", $user["correo"]);
+            $this->db->set("id_rol", $user["id_rol"]);
+            $this->db->where("id",$user["id"]);
+            $this->db->update('usuario');
+            
+            $this->db->set("id_tipo_documento", $employee["id_tipo_documento"]);
+            $this->db->set("documento_identidad", $employee["documento_identidad"]);
+            $this->db->set("nombre", $employee["nombre"]);
+            $this->db->set("apellido", $employee["apellido"]);
+           // $this->db->set("id_cargo", $employee["id_cargo"]);
+           // $this->db->set("id_gerencia", $employee["id_gerencia"]);
+            $this->db->where("id",$employee["id"]);
+            $this->db->update('empleado');
+           
+                
+        
+        $this->db->trans_complete();
+        
+        
+        
+        
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
+    public function resetpassword($userid, $password){
+        $this->db->set("clave", password_hash($password, PASSWORD_BCRYPT));
+        $this->db->set("estatus","activo");
+        $this->db->where("id",$userid);
+        $this->db->update('usuario');
+        if ($this->db->trans_status() === FALSE){
+            return false;
+        }else{
+            return true;
+        }
+        
         
     }
     

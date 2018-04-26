@@ -1320,6 +1320,20 @@ class CI_Form_validation {
 	}
 
 	// --------------------------------------------------------------------
+	
+	
+	/**
+	 * Alpha-numeric w/ spaces
+	 *
+	 * @param	string
+	 * @return	bool
+	 */
+	public function alpha_spaces($str)
+	{
+	    return (bool) preg_match('/^[A-Z ]+$/i', $str);
+	}
+	
+	// --------------------------------------------------------------------
 
 	/**
 	 * Alpha-numeric with underscores and dashes
@@ -1582,6 +1596,86 @@ class CI_Form_validation {
 		$this->_error_messages = array();
 		$this->error_string = '';
 		return $this;
+	}
+	
+	
+	/**
+	 * stripAccents function.
+	 *
+	 * @access public
+	 * @param mixed $String
+	 * @return $String
+	 * @author josé Manuel
+	 *
+	 *  recibe una cadena String y reemplaza los caracteres espaciales y acentos
+	 */
+	public function stripAccents($String){
+	    
+	    $String = str_replace("ä","a",$String);
+	    $String = str_replace("á","a",$String);
+	    $String = str_replace("à","a",$String);
+	    $String = str_replace("â","a",$String);
+	    $String = str_replace("ã","a",$String);
+	    $String = str_replace("ª","a",$String);
+	    $String = str_replace("Á","A",$String);
+	    $String = str_replace("À","A",$String);
+	    $String = str_replace("Â","A",$String);
+	    $String = str_replace("Ã","A",$String);
+	    $String = str_replace("Ä","A",$String);
+
+	    $String = str_replace("é","e",$String);
+	    $String = str_replace("è","e",$String);
+	    $String = str_replace("ê","e",$String);
+	    $String = str_replace("ë","e",$String);
+	    $String = str_replace("É","E",$String);
+	    $String = str_replace("È","E",$String);
+	    $String = str_replace("Ë","E",$String);
+	    $String = str_replace("Ë","E",$String);
+	    
+	    $String = str_replace("í","i",$String);
+	    $String = str_replace("ì","i",$String);
+	    $String = str_replace("î","i",$String);
+	    $String = str_replace("ï","i",$String);
+	    $String = str_replace("Í","I",$String);
+	    $String = str_replace("Í","I",$String);
+	    $String = str_replace("Ï","I",$String);
+	    $String = str_replace("Ï","I",$String);
+	    
+	    $String = str_replace("ó","o",$String);
+	    $String = str_replace("ò","o",$String);
+	    $String = str_replace("ô","o",$String);
+	    $String = str_replace("õ","o",$String);
+	    $String = str_replace("ö","o",$String);
+	    $String = str_replace("º","o",$String);
+	    $String = str_replace("Ó","O",$String);
+	    $String = str_replace("Ò","O",$String);
+	    $String = str_replace("Ô","O",$String);
+	    $String = str_replace("Õ","O",$String);
+	    $String = str_replace("Ö","O",$String);
+	    
+	    $String = str_replace("ú","u",$String);
+	    $String = str_replace("ù","u",$String);
+	    $String = str_replace("û","u",$String);
+	    $String = str_replace("ü","u",$String);
+	    $String = str_replace("Ú","U",$String);
+	    $String = str_replace("Ù","U",$String);
+	    $String = str_replace("Û","U",$String);
+	    $String = str_replace("Ü","U",$String);
+
+	    $String = str_replace("^","",$String);
+	    $String = str_replace("´","",$String);
+	    $String = str_replace("`","",$String);
+	    $String = str_replace("¨","",$String);
+	    $String = str_replace("~","",$String);
+	    
+	    $String = str_replace("ç","c",$String);
+	    $String = str_replace("Ç","C",$String);
+	    $String = str_replace("ñ","n",$String);
+	    $String = str_replace("Ñ","N",$String);
+	    $String = str_replace("Ý","Y",$String);
+	    $String = str_replace("ý","y",$String);
+	    
+	    return $String;
 	}
 
 }
