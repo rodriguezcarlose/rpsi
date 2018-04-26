@@ -39,6 +39,7 @@ class Report extends CI_Controller
             }
         }
         $this->load->model('MaquinaVotacion_model');
+        $this->load->model('Error_model');
     }
 
     public function index()
@@ -49,6 +50,17 @@ class Report extends CI_Controller
         $resultCountMedioTransmision = $this->MaquinaVotacion_model->getCountMedioTransmision();
         $resultCountTipReemplazo = $this->MaquinaVotacion_model->getCountTipReemplazo();
         $mv = $this->MaquinaVotacion_model->getModelosMV();
+        $mt = $this->MaquinaVotacion_model->getCountTotalMedioTransmision();
+        $tr = $this->MaquinaVotacion_model->getCountTotalTipReemplazo();
+        
+        
+        
+        $resultCountErrorTipo= $this->Error_model->getCountErrorTipo();
+        $resultTotalErrorTipo= $this->Error_model->getTotalErrorTipo();
+        
+        
+       
+        
         // echo count($mv->result());
         $reports = array();
         
@@ -81,6 +93,15 @@ class Report extends CI_Controller
             
             array_push($reports, $report);
         }
+        
+        $data->countModelo = $mv;
+        $data->mediotrans = $mt;
+        $data->reemplazo = $tr;
+        $data->countErrorTipo = $resultCountErrorTipo;
+        $data->totalErrorTipo = $resultTotalErrorTipo;
+        
+
+        
         
         $data->reports = $reports;
         

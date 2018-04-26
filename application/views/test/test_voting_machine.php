@@ -8,6 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     	<?php 
                 $fila=$consulta->result(); 
                 $centrovotacion= $fila[0]->codigo_centrovotacion .'-'. $fila[0]->centro_votacion;
+                $finalizado = false;
                 
                 switch ($fila[0]->estatus) {
                     case "SELECCIONADA":
@@ -24,6 +25,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         break;
                     case "CERRADA":
                         $proxEstatus = "Transmisi&oacute;n";
+                        break;
+                    case "TRANSMITIDA":
+                        $proxEstatus = "Transmisi&oacute;n";
+                        $finalizado = true;
                         break;
                 }
                 
@@ -52,7 +57,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div> 
                <div class="large-6 medium-4 columns">
                     <label>C&oacute;digo Validaci&oacute;n</label>
-                    <?php if( $fila[0]->id_estatus_maquina == 3){?>
+                    <?php if( $fila[0]->id_estatus_maquina == 3 || $finalizado){?>
                     <input type="text" placeholder="" name="codigo" id="codigo" disabled value="" />
                     <?php }else{?>
                     <input type="text" placeholder="" name="codigo" id="codigo" value=""/>
@@ -60,7 +65,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div> 
                <div class="large-6 medium-4 columns">
                     <label>Medio de Transmisi&oacute;n</label>
-                    <?php if( $fila[0]->id_estatus_maquina !== "5"){?>
+                    <?php if( $fila[0]->id_estatus_maquina !== "5" || $finalizado){?>
                    		<select name="medio" id="medio" disabled>
                    	<?php }else{?>
                   	
@@ -75,46 +80,51 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div> 
 
         <br>
-        <h3>Registrar Errores</h3>
-			<div class="large-12 medium-4 columns">
-                <label>Buscar Error</label>
-               	<select data-autocomplete=""  multiple="" name="error[]" id = "error">
-               		<option value="">Buscar errores</option>
-               		<?php 
-               		   foreach ($errormv->result() as $error){
-               		?>
-               		<option value="<?= $error->id?>"><?= $error->descripcion?></option>
-               		
-               		<?php
-               		    
-               		}
-               		
-               		?>
-               	</select>
-
-            </div>
-        	<br>    
+        <?php if (!$finalizado){?>
+            <h3>Registrar Errores</h3>
+    			<div class="large-12 medium-4 columns">
+                    <label>Buscar Error</label>
+                   	<select data-autocomplete=""  multiple="" name="error[]" id = "error">
+                   		<option value="">Buscar errores</option>
+                   		<?php 
+                   		   foreach ($errormv->result() as $error){
+                   		       ?>
+                   		       <option value="<?= $error->id?>"><?= $error->descripcion?></option>
+                   		  <?php }
+                   		
+                   		?>
+                   	</select>
+    
+                </div>
+            	<br>  
+           <?php }?> 
+           <?php if (!$finalizado){?> 
         	<h3>Tipo Reemplazo</h3>
-			<div class="large-6 medium-4 columns">
-                <label>Tipo Reemplazo</label>
-               	<select name="tiporeemplazo" id ="tiporeemplazo">
-               		<option value="">Seleccione</option>
-               		<?php 
-               		foreach ($tiporeemplazo->result() as $tipor){
-               		?>
-               		<option value="<?= $tipor->id?>"><?= $tipor->descripcion?></option>
-               		<?php
-               		}
-               		?>
-               	</select>
-            </div>
-        	<br> 
-
-    		
+    			<div class="large-6 medium-4 columns">
+                    <label>Tipo Reemplazo</label>
+                   	<select name="tiporeemplazo" id ="tiporeemplazo">
+                   		<option value="">Seleccione</option>
+                   		<?php 
+                   		foreach ($tiporeemplazo->result() as $tipor){
+                   		?>
+                   		<option value="<?= $tipor->id?>"><?= $tipor->descripcion?></option>
+                   		<?php
+                   		}
+                   		?>
+                   	</select>
+                </div>
+            	<br> 
+			<?php }?> 
+    		 <?php if (!$finalizado){?> 
             <div class="small-12 column text-right buttonPanel">
                 <input id="btnCloseModalEditor" class="button small right alert" value="Cancelar" type="submit" onclick="this.form.action = '<?=base_url()?>index.php/voting_machine/cancelar'">
                 <input id="btnEnviar" class="button small right" value="Aceptar" type="submit">
             </div>
+            <?php }else{?> 
+            <div class="small-12 column text-right buttonPanel">
+                <input id="btnEnviar" class="button small right" value="Aceptar" type="submit"onclick="this.form.action = '<?=base_url()?>index.php/voting_machine/cancelar'">
+            </div>
+            <?php }?> 
         <?= form_close() ?>            
 
     </div>

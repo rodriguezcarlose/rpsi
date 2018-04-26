@@ -62,9 +62,9 @@
 			
     			<?php 
                     if (isset($_SESSION['logged_in'])  === true)
-                        echo '<a href="'. base_url().'user/logout">[SALIR]</a>';
+                        echo '<a href="'. base_url().'index.php/user/logout">[SALIR]</a>';
                     else 
-                        echo '<a href="'. base_url().'user/login">[INGRESAR]</a>';
+                        echo '<a href="'. base_url().'index.php/user/login">[INGRESAR]</a>';
                 ?>
 			</li>
         </ul>

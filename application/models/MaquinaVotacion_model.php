@@ -239,10 +239,41 @@ class MaquinaVotacion_model extends CI_Model
     }
     
     public function resetVotingMachine($idmaquina='', $status=''){        
+       
+        $this->db->trans_start();
         $this->db->set("id_estatus_maquina",$status);
         $this->db->set("medio_transmision",NULL);
         $this->db->where("id",$idmaquina);
         $this->db->update("maquina_votacion");
+        
+        $this->db->select("id");
+        $this->db->where("id_maquina_votacion",$idmaquina);
+        $procesos = $this->db->get("proceso");
+        //echo $this->db->last_query();
+        
+        foreach ($procesos->result() as $proceso){
+           
+           //eliminamos los errores
+            $this->db->where("id_proceso",$proceso->id);
+            $this->db->delete("proceso_error");
+            
+            //eliminamos los reemplazos
+            $this->db->where("id_proceso",$proceso->id);
+            $this->db->delete("proceso_reemplazo");
+            
+            //eiliminamos los procesos
+            $this->db->where("id",$proceso->id);
+            $this->db->delete("proceso");
+            
+            //eliminamos la relacion maquina usuario
+            $this->db->where("id_maquina",$idmaquina);
+            $this->db->delete("usuario_maquina");
+        }
+        
+        
+        
+        $this->db->trans_complete();
+        
         if ($this->db->trans_status() === FALSE){
             return false;
         }else{
@@ -267,20 +298,7 @@ class MaquinaVotacion_model extends CI_Model
         $result=$this->db->query("SELECT mv.modelo_maquina, em.descripcion estatus, COUNT(*) cantidad
                             FROM maquina_votacion mv, estatus_maquina em
                             WHERE em.id = mv.id_estatus_maquina
-                            AND em.id = 1
-                            GROUP BY mv.id_estatus_maquina,mv.modelo_maquina
-                            UNION
-                            SELECT mv.modelo_maquina, em.descripcion estatus, COUNT(*) cantidad
-                            FROM maquina_votacion mv, estatus_maquina em
-                            WHERE em.id = mv.id_estatus_maquina
-                            AND em.id = 6
-                            GROUP BY mv.id_estatus_maquina,mv.modelo_maquina
-                            UNION
-                            SELECT mv.modelo_maquina,'INICIADA' estatus, COUNT(*) cantidad
-                            FROM maquina_votacion mv, estatus_maquina em
-                            WHERE em.id = mv.id_estatus_maquina
-                            AND em.id IN (2,3,4,5)
-                            GROUP BY estatus,mv.modelo_maquina");
+                            GROUP BY mv.id_estatus_maquina,mv.modelo_maquina");
         
         if ($result->num_rows()>0){
             
@@ -312,12 +330,12 @@ class MaquinaVotacion_model extends CI_Model
     public function getCountTipReemplazo(){
         
         $result=$this->db->query("SELECT mv.modelo_maquina, tr.descripcion, COUNT(*) cantidad
-                                    FROM proceso_error pe, proceso p, maquina_votacion mv, tipo_reemplazo tr
-                                    WHERE pe.id_tipo_reemplazo IS NOT NULL
+                                    FROM proceso_reemplazo pe, proceso p, maquina_votacion mv, tipo_reemplazo tr
+                                    WHERE pe.id_reemplazo IS NOT NULL
                                     AND p.id = pe.id_proceso
                                     AND mv.id = p.id_maquina_votacion
-                                    AND tr.id = pe.id_tipo_reemplazo
-                                    GROUP BY mv.modelo_maquina, pe.id_tipo_reemplazo");
+                                    AND tr.id = pe.id_reemplazo
+                                    GROUP BY mv.modelo_maquina, pe.id_reemplazo");
         if ($result->num_rows()>0){
             
             return $result;
@@ -329,7 +347,9 @@ class MaquinaVotacion_model extends CI_Model
     }
     
     public function getModelosMV(){
-        $result=$this->db->query("SELECT DISTINCT modelo_maquina FROM maquina_votacion");
+        $result=$this->db->query("SELECT DISTINCT modelo_maquina, COUNT(*) cantidad
+                                    FROM maquina_votacion
+                                    GROUP BY modelo_maquina");
         if ($result->num_rows()>0){
             
             return $result;
@@ -338,8 +358,40 @@ class MaquinaVotacion_model extends CI_Model
             
             return null;
         }
-
-       
+    }
+    
+    public function getCountTotalMedioTransmision(){
         
+        $result=$this->db->query("SELECT DISTINCT mv.modelo_maquina, COUNT(*) cantidad
+                            FROM maquina_votacion mv
+                            WHERE mv.medio_transmision IS NOT NULL
+                            GROUP BY mv.modelo_maquina");
+        if ($result->num_rows()>0){
+            
+            return $result;
+            
+        }else {
+            
+            return null;
+        }
+    }
+    
+    public function getCountTotalTipReemplazo(){
+        
+        $result=$this->db->query("SELECT mv.modelo_maquina, COUNT(*) cantidad
+                                    FROM proceso_reemplazo pe, proceso p, maquina_votacion mv, tipo_reemplazo tr
+                                    WHERE pe.id_reemplazo IS NOT NULL
+                                    AND p.id = pe.id_proceso
+                                    AND mv.id = p.id_maquina_votacion
+                                    AND tr.id = pe.id_reemplazo
+                                    GROUP BY mv.modelo_maquina");
+        if ($result->num_rows()>0){
+            
+            return $result;
+            
+        }else {
+            
+            return null;
+        }
     }
 }

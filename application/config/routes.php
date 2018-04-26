@@ -62,3 +62,6 @@ $route['translate_uri_dashes'] = FALSE;
 $route['default_controller'] = 'pages';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+//$route['user/login'] = 'index.php/user/login';
+

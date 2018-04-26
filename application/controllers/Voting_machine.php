@@ -43,6 +43,7 @@ class Voting_machine extends CI_Controller
         $this->load->model('Proceso_model');
         $this->load->model('Fase_model');
         $this->load->model('UsuarioMaquina_model');
+        $data = new stdClass();
     }
 
     // Show login page
@@ -147,10 +148,10 @@ class Voting_machine extends CI_Controller
 
     public function seleccionada()
     {
+        $data = $this->data;
         $data = new stdClass();
         
         $idmaquina = $this->input->post('id');
-        
         $data->consulta = $this->MaquinaVotacion_model->getDetailTestVotingMachine($idmaquina);
         $data->errormv = $this->Error_model->getError();
         $data->tiporeemplazo = $this->TipoReemplazo_model->getTipoReemplazo();
@@ -172,7 +173,7 @@ class Voting_machine extends CI_Controller
                 $this->UsuarioMaquina_model->selccionarMesa($usuariomaquina);
             }
             $this->load->view('templates/header');
-            $this->load->view('templates/navigation');
+            $this->load->view('templates/navigation',$this->data);
             $this->load->view('test/test_voting_machine', $data);
             $this->load->view('templates/footer');
         }
@@ -180,6 +181,7 @@ class Voting_machine extends CI_Controller
 
     public function resettest()
     {
+        log_message('info', 'Voting_machine|resettest|inicio');
         $data = new stdClass();
         $seleccionada = 1;
         $this->form_validation->set_rules('codigo_centrovotacion', 'C&oacute;digo de centro de votacion', 'trim|required|xss_clean|exact_length[9]', array(
@@ -195,13 +197,14 @@ class Voting_machine extends CI_Controller
         ));
         
         if ($this->form_validation->run() == FALSE) {
+            log_message('info', 'Voting_machine|resettest|validacion run');
             
             $this->load->view('templates/header');
             $this->load->view('templates/navigation');
             $this->load->view('test/reset_test_voting_machine');
             $this->load->view('templates/footer');
         } else {
-            
+            log_message('info', 'Voting_machine|resettest|validacion else run');
             $centrovotacion = $this->input->post('codigo_centrovotacion');
             $mesa = $this->input->post('mesa');
             
@@ -209,6 +212,7 @@ class Voting_machine extends CI_Controller
             $result = $this->MaquinaVotacion_model->getDetailVotingMachine($centrovotacion, $mesa);
             
             if ($result != null) {
+                log_message('info', 'Voting_machine|resettest|result null');
                 $dataVotingMachine = $result->result();
                 $dataVotingMachine[0]->id;
                 $result = $this->MaquinaVotacion_model->resetVotingMachine($dataVotingMachine[0]->id, $seleccionada);
@@ -222,6 +226,7 @@ class Voting_machine extends CI_Controller
                 $this->load->view('templates/navigation', $data);
                 $this->load->view('test/reset_test_voting_machine');
             } else {
+                log_message('info', 'Voting_machine|resettest|result else');
                 $data->error = "No se encontr&oacute; el n&uacute;mero consultado.";
                 $this->load->view('templates/header');
                 $this->load->view('templates/navigation', $data);
@@ -229,6 +234,7 @@ class Voting_machine extends CI_Controller
                 $this->load->view('templates/footer');
             }
         }
+        log_message('info', 'Voting_machine|resettest|fin');
     }
 
     public function consulta_lista_errores()
@@ -280,6 +286,7 @@ class Voting_machine extends CI_Controller
                 }
             }
         }
+        $data->errorselect = $errosrselect;
         // si el tipo de error seleccionado requiere reemplazo validamos que haya selecionado uno.
         if ($reemplazo) {
             if ($this->form_validation->required($this->input->post('tiporeemplazo')) == false) {
@@ -328,6 +335,7 @@ class Voting_machine extends CI_Controller
                     $idproxEstatus = 6;
                     $fase = 5;
                     break;
+                
             }
             // validamos el c�digo de Validaci�n
             // Si no seleciono un error el c�digo de validaci�n es requerido
@@ -371,7 +379,15 @@ class Voting_machine extends CI_Controller
                 $procesoError = array();
                 if ($cantError > 0) {
                     foreach ($this->input->post('error') as $error) {
-                        $reemplazo = null;
+                        
+                        $errorselect = [
+                            "id_proceso" => "",
+                            "id_error" => $error,
+                            "fecha" => date('Y-m-d H:i:s')
+                        ];
+                        array_push($procesoError, $errorselect);
+                        
+                      /*  $reemplazo = null;
                         $result = $this->Error_model->getTipoErrorById($error);
                         
                         if ($tipoErrorSelect->id_tipo_error == "2") {
@@ -393,7 +409,7 @@ class Voting_machine extends CI_Controller
                             ];
                         }
                         
-                        array_push($procesoError, $errorselect);
+                        array_push($procesoError, $errorselect);*/
                     }
                 }
                 
@@ -401,19 +417,19 @@ class Voting_machine extends CI_Controller
                     
                     if ($this->Proceso_model->countProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase) > 0) {
                         $idproceso = $this->Proceso_model->getIdProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase);
-                        $this->Proceso_model->updateProceso($proceso, $procesoError, $idproxEstatus, $this->input->post('medio'), $idproceso);
+                        $this->Proceso_model->updateProceso($proceso, $procesoError, $idproxEstatus, $this->input->post('medio'), $idproceso,$this->input->post('tiporeemplazo'));
                     } else {
-                        $this->Proceso_model->insertproceso($proceso, $procesoError, $idproxEstatus, $this->input->post('medio'));
+                        $this->Proceso_model->insertproceso($proceso, $procesoError, $idproxEstatus, $this->input->post('medio'),$this->input->post('tiporeemplazo'));
                     }
                 } else {
-                    echo "Aqui ----> " . $this->Proceso_model->countProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase);
+                    //echo "Aqui ----> " . $this->Proceso_model->countProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase);
                     
                     if ($this->Proceso_model->countProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase) > 0) {
                         $idproceso = $this->Proceso_model->getIdProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase);
-                        $this->Proceso_model->updateProceso($proceso, $procesoError, $this->input->post('idestatusmaquina'), $this->input->post('medio'), $idproceso);
+                        $this->Proceso_model->updateProceso($proceso, $procesoError, $this->input->post('idestatusmaquina'), $this->input->post('medio'), $idproceso,$this->input->post('tiporeemplazo'));
                     } else {
                         
-                        $this->Proceso_model->insertproceso($proceso, $procesoError, $this->input->post('idestatusmaquina'), $this->input->post('medio'));
+                        $this->Proceso_model->insertproceso($proceso, $procesoError, $this->input->post('idestatusmaquina'), $this->input->post('medio'),$this->input->post('tiporeemplazo'));
                     }
                 }
                 // des selecionamos la máquina del usurio
@@ -422,12 +438,13 @@ class Voting_machine extends CI_Controller
                 $usuariomaquina = array();
                 $usuariomaquina["id_usuario"] = $_SESSION['id'];
                 $usuariomaquina["id_maquina"] = $this->input->post('id');
-                $this->UsuarioMaquina_model->desSelccionarMesa($usuariomaquina);
+                //$this->UsuarioMaquina_model->desSelccionarMesa($usuariomaquina);
                 
                 $data = new stdClass();
-                $data->success = "Se ha registrado con &eacute;xito el proceso de la m&aacute;quina.";
+                $data->success = "Se ha registrado con &eacute;xito el proceso de ".$proxEstatus." de la m&aacute;quina.";
                 $this->data = $data;
-                $this->index();
+               // $this->index();
+                $this->seleccionada();
             }
         }
     }
