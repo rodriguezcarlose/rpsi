@@ -55,10 +55,11 @@ class Error_model extends CI_Model
     
     public function getCountErrorTipo(){
         
-        $result=$this->db->query("SELECT tr.descripcion, COUNT(*) cantidad
+        $result=$this->db->query("(SELECT tr.descripcion, COUNT(*) cantidad
                                     FROM proceso_error pe, error tr
                                     WHERE tr.id = pe.id_error
-                                    GROUP BY tr.descripcion");
+                                    GROUP BY tr.descripcion)
+                                    ORDER BY cantidad DESC");
         if ($result->num_rows()>0){
             
             return $result;

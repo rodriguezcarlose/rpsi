@@ -35,6 +35,4 @@ class UsuarioMaquina_model extends CI_Model
         $this->db->where("id_usuario",$idusuario);
         return $this->db->get("usuario_maquina")->row("id_maquina");
     }
-    
-    
 }

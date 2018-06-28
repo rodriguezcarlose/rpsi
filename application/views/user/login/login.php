@@ -9,8 +9,8 @@
 			</div>
 			<?= form_open() ?>
 				<div class="large-4 medium-4 columns">
-					<label for="username"><span style="color:red;">*</span>Usuario</label>
-					<input type="text" class="form-control" id="username" name="username" placeholder="Usuario">
+					<label for="ingreso"><span style="color:red;">*</span>Usuario</label>
+					<input type="text" class="form-control" id="ingreso" name="ingreso" placeholder="Usuario" onkeypress="return validar_texto(event)" maxlength="15">
 				</div>
 				
 				<div class="large-4 medium-4 columns">

@@ -1,6 +1,6 @@
 ﻿var UiCulture = window.navigator.userLanguage || window.navigator.language;
 $(function () {
-    
+
     $(document).foundation();
 
     //Added functionality for MSIE detecction after jquery 1.9
@@ -20,7 +20,6 @@ $(function () {
     });
 
     BindSpinner();
-
 
     /***********************/
     /*Menu******************/
@@ -61,10 +60,8 @@ $(function () {
                 if (elementList.length == 0) {
                     showSubMenu(element);
                 }
-
             });
         }
-
     }
 
     function animateFadeOut() { }
@@ -136,6 +133,20 @@ $(function () {
 
 });//Fin
 
+function PostToServer(value, status) {
+    $.ajax({
+        url: "http://localhost/rpsi/index.php/voting_machine/change_votes",
+        type: "POST",
+        data: {
+            voto: value,
+            estatus: status
+        },
+        dataType: "JSON",
+        success: function (jsonStr) {
+            $("#result").text(JSON.stringify(jsonStr));
+        }
+    });
+}
 
 // Add attributes and clases to table elements
 function addResponsiveDataToTable(table) {
@@ -239,10 +250,10 @@ function BindSpinner() {
         if (jqxhr.status == 401 || jqxhr.status == 302 || jqxhr.status == 0) {
             modalLogin(ajaxLogin);
         } else {
-            modalMessage(attentionTitle, "Ha ocurrido un error. Intentelo nuevamente o contacte a su administrador.", -1, null, null);
+            modalMessage("", "Ha ocurrido un error. Intentelo nuevamente o contacte a su administrador.", -1, null, null);
         }
     });
-};
+}
 
 /*Modal Login*******************************************************/
 /*******************************************************************/

@@ -8,8 +8,8 @@
                
                 <a href="#" class="show-for-medium-up" style="float: left">  
                         <?php 
-                            if (isset($_SESSION['logged_in'])  === true) :
-                            echo "Bienvenido: ".$_SESSION['nombre']." ".$_SESSION['apellido'];
+                            if (isset($_SESSION['logged_in'])  === true):
+                                echo "Bienvenido: ".$_SESSION['nombre']." ".$_SESSION['apellido'];
                             endif;
                         ?>
                 </a>

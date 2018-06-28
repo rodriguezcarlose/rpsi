@@ -27,6 +27,15 @@ class Voting_machine extends CI_Controller
                 redirect(base_url());
             }
         }
+
+        // load db
+        $this->load->database();
+
+        // load Pagination library
+        $this->load->library('pagination');
+
+        // load URL helper
+        $this->load->helper('url');
         
         // Load form helper library
         $this->load->helper('form');
@@ -43,6 +52,8 @@ class Voting_machine extends CI_Controller
         $this->load->model('Proceso_model');
         $this->load->model('Fase_model');
         $this->load->model('UsuarioMaquina_model');
+        $this->load->model('User_model');
+        $this->load->model('Contingencia_model');
         $data = new stdClass();
     }
 
@@ -50,7 +61,6 @@ class Voting_machine extends CI_Controller
     public function index()
     {
         $data = new stdClass();
-        
         if ($this->UsuarioMaquina_model->getCountUsuario($_SESSION['id']) > 0) {
             $idmaquina = $this->UsuarioMaquina_model->getMaquinaIDByUser($_SESSION['id']);
             $result = $this->MaquinaVotacion_model->getDetailVotingMachinebById($idmaquina);
@@ -110,9 +120,6 @@ class Voting_machine extends CI_Controller
                 $dataVotingMachine[0]->id;
                  */
                 
-                
-                
-                
                 if ($result != null) {
                     $fila=$result->result();
                     
@@ -148,11 +155,38 @@ class Voting_machine extends CI_Controller
 
     public function seleccionada()
     {
+        //echo("<script>console.log('id_maquina: ".json_encode($idmaquina)."');</script>");
         $data = $this->data;
         $data = new stdClass();
-        
-        $idmaquina = $this->input->post('id');
+        $erroresseleccionados = array();
+
+        if ($this->input->post('id') != null) {
+            $idmaquina = $this->input->post('id'); // anteriormente se obtenía el valor por la constante post, sin embargo se perdía el valor cuando se actualizaba la páginación.
+        } else {
+            $idmaquina = $this->UsuarioMaquina_model->getMaquinaIDByUser($_SESSION['id']);
+        }
+
+        $errores = $this->MaquinaVotacion_model->getErrorVotindMahcineById($idmaquina);
+
+        if ($errores != null) {
+            $erroresseleccionados = $errores->result_array();
+        }
+        $data->erroresseleccionados = $erroresseleccionados;
+        $contingencia = $this->Contingencia_model->getReemplazosByMv($idmaquina);
+
+        if ($contingencia != null){
+            $data->stop_process = true;
+        }else {
+            $data->stop_process = false;
+        }
+
         $data->consulta = $this->MaquinaVotacion_model->getDetailTestVotingMachine($idmaquina);
+
+        // obtenemos el centro y mesa de votacion
+        $query=$data->consulta->result_array();
+        $centro_votacion = $query[0]['codigo_centrovotacion'];
+        $mesa = $query[0]['mesa'];
+        
         $data->errormv = $this->Error_model->getError();
         $data->tiporeemplazo = $this->TipoReemplazo_model->getTipoReemplazo();
         
@@ -160,22 +194,79 @@ class Voting_machine extends CI_Controller
         $usuariomaquina = array();
         $usuariomaquina["id_usuario"] = $_SESSION['id'];
         $usuariomaquina["id_maquina"] = $fila[0]->id;
-        
+
+        if ($fila[0]->id_estatus_maquina == "3") {
+            // init params
+            $params = array();
+            $limit_per_page = 10;
+            $start_index = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+            $total_records = $this->User_model->get_total($centro_votacion, $mesa);
+            if ($total_records > 0)
+            {
+                // get current page records
+                $data->votantes = $this->User_model->get_current_page_records($limit_per_page, $start_index, $centro_votacion, $mesa);
+                $config['base_url'] = base_url() . 'index.php/voting_machine/seleccionada';
+                $config['total_rows'] = $total_records;
+                $config['per_page'] = $limit_per_page;
+                $config["uri_segment"] = 3;
+                $config['num_links'] = 6;
+                $this->pagination->initialize($config);
+                // build paging links
+                $data->links = $this->pagination->create_links();
+            }
+        }
         if ($this->UsuarioMaquina_model->getmaquina($usuariomaquina) > 0) {
-            $data = new stdClass();
+            //$data = new stdClass();
             $data->error = "la m&aacute;quina ya se ecuentra selccionada por otro usuario.";
             $this->data = $data;
             $this->index();
+        } else if ($contingencia != null) {
+            $data = new stdClass();
+            $data->error = "Reemplazos pendientes para está máquina de votación, deben ser liberados para continuar con el proceso de pruebas.";
+            $this->load->view('templates/header');
+            $this->load->view('templates/navigation', $data);
+            $this->load->view('test/search_voting_machine');
+            $this->load->view('templates/footer');
         } else {
-            
             if ($this->UsuarioMaquina_model->getusuarioMaquina($usuariomaquina) == 0) {
-                // marcamos la mesa como selccionada para el usuario
+                // marcamos la mesa como seleccionada para el usuario
                 $this->UsuarioMaquina_model->selccionarMesa($usuariomaquina);
             }
             $this->load->view('templates/header');
-            $this->load->view('templates/navigation',$this->data);
+            $this->load->view('templates/navigation', $data);
             $this->load->view('test/test_voting_machine', $data);
             $this->load->view('templates/footer');
+        }
+    }
+
+    public function change_votes() {
+        $data = $this->data;
+        $data = new stdClass();
+
+        $votante_id = $this->input->post('voto');
+        $votante_estatus = $this->input->post('estatus');
+
+        if ($votante_estatus == 'true') {
+            $votante_estatus = 1;
+        } else if ($votante_estatus == 'false') {
+            $votante_estatus = 0;
+        }
+
+        $data = array(
+            'table_name' => 'votantes', // pass the real table name
+            'id' => $votante_id,
+            'voto' => $votante_estatus
+        );
+
+        if($this->User_model->upddata($data)) // call the method from the model
+        {
+            // update successful
+            echo("<script>console.log('update successful');</script>");
+        }
+        else
+        {
+            // update not successful
+            echo("<script>console.log('update not successful');</script>");
         }
     }
 
@@ -260,10 +351,26 @@ class Voting_machine extends CI_Controller
     {
         $data = new stdClass();
         $errosrselect = array();
+        $erroresseleccionados = array();
         $cantError = 0;
         $reemplazo = false;
         $validation = true;
         $idmaquina = $this->input->post('id');
+
+        $contingencia = $this->Contingencia_model->getReemplazosByMv($idmaquina);
+
+        if ($contingencia != null){
+            $data->stop_process = true;
+        } else {
+            $data->stop_process = false;
+        }
+
+        $errores = $this->MaquinaVotacion_model->getErrorVotindMahcineById($idmaquina);
+        if ($errores != null) {
+            $erroresseleccionados = $errores->result_array();
+        }
+
+        $data->erroresseleccionados = $erroresseleccionados;
         $data->consulta = $this->MaquinaVotacion_model->getDetailTestVotingMachine($idmaquina);
         $data->errormv = $this->Error_model->getError();
         $data->tiporeemplazo = $this->TipoReemplazo_model->getTipoReemplazo();
@@ -287,11 +394,23 @@ class Voting_machine extends CI_Controller
             }
         }
         $data->errorselect = $errosrselect;
+
         // si el tipo de error seleccionado requiere reemplazo validamos que haya selecionado uno.
         if ($reemplazo) {
             if ($this->form_validation->required($this->input->post('tiporeemplazo')) == false) {
                 $validation = false;
                 $data->error = "Debe seleccionar un tipo de reemplazo para el error seleccionado.";
+                $this->load->view('templates/header');
+                $this->load->view('templates/navigation', $data);
+                $this->load->view('test/test_voting_machine', $data);
+                $this->load->view('templates/footer');
+            }
+        }
+
+        if ($this->input->post('tiporeemplazo') != false) {
+            if ($cantError == 0) {
+                $validation = false;
+                $data->error = "Debe seleccionar un tipo de error para el reemplazo seleccionado.";
                 $this->load->view('templates/header');
                 $this->load->view('templates/navigation', $data);
                 $this->load->view('test/test_voting_machine', $data);
@@ -335,7 +454,12 @@ class Voting_machine extends CI_Controller
                     $idproxEstatus = 6;
                     $fase = 5;
                     break;
-                
+                case "TRANSMITIDA":
+                    $codigo = $codigo->codigo_transmision;
+                    $proxEstatus = "Auditada";
+                    $idproxEstatus = 7;
+                    $fase = 6;
+                    break;
             }
             // validamos el c�digo de Validaci�n
             // Si no seleciono un error el c�digo de validaci�n es requerido
@@ -347,7 +471,7 @@ class Voting_machine extends CI_Controller
                 $this->load->view('templates/footer');
                 // si no selecciono error y el codigo de validaci�n no pertenece al proximo estatus
             } else if ($cantError == 0 && $this->input->post('idestatusmaquina') !== "3" && $codigo !== $this->input->post('codigo')) {
-                $data->error = "El c&oacute;digo no es v&aacute;lido, se esperra el c&oacute;digo de " . $proxEstatus . ".";
+                $data->error = "El c&oacute;digo no es v&aacute;lido, se espera el c&oacute;digo de " . $proxEstatus . ".";
                 $this->load->view('templates/header');
                 $this->load->view('templates/navigation', $data);
                 $this->load->view('test/test_voting_machine', $data);
@@ -367,6 +491,7 @@ class Voting_machine extends CI_Controller
                 $this->load->view('templates/footer');
             } else {
                 $proceso = array();
+                $procesoError = array();
                 $errorselect = array();
                 $proceso = [
                     "id_maquina_votacion" => $this->input->post("id"),
@@ -375,14 +500,14 @@ class Voting_machine extends CI_Controller
                     "fechainicio" => date('Y-m-d H:i:s'),
                     "fechafin" => date('Y-m-d H:i:s')
                 ];
-                
-                $procesoError = array();
+
                 if ($cantError > 0) {
                     foreach ($this->input->post('error') as $error) {
                         
                         $errorselect = [
                             "id_proceso" => "",
                             "id_error" => $error,
+                            "id_fase" => $fase,
                             "fecha" => date('Y-m-d H:i:s')
                         ];
                         array_push($procesoError, $errorselect);

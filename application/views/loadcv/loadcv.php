@@ -24,7 +24,7 @@
     						<h3>Cargar M&aacute;quinas de Votaci&oacute;n</h3>
     						<div class="field small-3 column">
                             	<label for="Enum:">Archivo:</label>
-    							<input type="file" name="userfile" size="20"/>
+    							<input type="file" name="userfile" size="20" required/>
     						</div>
                             <input type="submit" value="Cargar" id="btnCargar" class="button small"  />
                             <input type="hidden" name="grabar" />
@@ -73,9 +73,11 @@
                   			</tr>
                 		</thead>
                 		<tbody>
+                		
                         <?php 
-                            foreach ($results as $data) { 
-                            ?>
+                        if(is_array($results))
+                        foreach ($results as $data) { 
+                        ?>
                                 <tr>
                                 
                                     <!--td>

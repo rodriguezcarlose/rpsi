@@ -24,15 +24,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                <div class="large-4 medium-4 columns">
                     <label>Estatus</label>
                     <input type="text" placeholder="" name="estatus" id="estatus" disabled value="<?= $fila[0]->estatus; ?>"/>
-                </div> 
-              
-                    <input type="hidden"  name="id" id="id"  value="<?= $fila[0]->id; ?>"/>
+                </div>
 
+               <input type="hidden"  name="id" id="id"  value="<?= $fila[0]->id; ?>"/>
 
             <div class="small-12 column text-right buttonPanel">
             	<?php if ($fila[0]->id_estatus_maquina == "6"){?>
-            		<input id="btnEnviar" class="button small right" value="Aceptar" type="submit" onclick="this.form.action = '<?=base_url()?>index.php/voting_machine/cancelar'">
-            	<?php }else{?>
+                    <input type="hidden" value="<?= $fila[0]->codigo_centrovotacion; ?>" id="codigo_centrovotacion" name = "codigo_centrovotacion">
+                    <input type="hidden" value="<?= $fila[0]->mesa; ?>" id="mesa" name = "mesa">
+                    <input id="btnEnviar" class="button small right alert" value="Descargar Reporte" type="submit"onclick="this.form.action = '<?=base_url()?>index.php/report/pdf_gen'; this.form.method='POST'">
+                    <input id="btnEnviar" class="button small right" value="Aceptar" type="submit" onclick="this.form.action = '<?=base_url()?>index.php/voting_machine/cancelar'">
+            	<?php } else { ?>
                     <input id="btnCloseModalEditor" class="button small right alert" value="Cancelar" type="submit" onclick="this.form.action = '<?=base_url()?>index.php/voting_machine/cancelar'">
                     <input id="btnEnviar" class="button small right" value="Aceptar" type="submit">
                 <?php }?>

@@ -1,5 +1,5 @@
 <?php
-$config['per_page'] = 10;
+$config['per_page'] = 1;
 $config["uri_segment"] = 3;
 
 //$config['full_tag_open'] = '<div class="pagination">';

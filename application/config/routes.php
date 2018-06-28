@@ -58,6 +58,8 @@ $route['translate_uri_dashes'] = FALSE;
 
 */
 
+//$route['voting_machine/seleccionada/(:num)'] = 'voting_machine';//cuando no sea la primera página
+//$route['voting_machine/seleccionada'] = 'voting_machine';//cuando sea la primera página
 
 $route['default_controller'] = 'pages';
 $route['404_override'] = '';

@@ -7,7 +7,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @extends CI_Model
  */
 class User_model extends CI_Model {
-    
     /**
      * __construct function.
      *
@@ -15,12 +14,56 @@ class User_model extends CI_Model {
      * @return void
      */
     public function __construct() {
-        
         parent::__construct();
         $this->load->database();
-        
     }
-    
+
+    public function get_current_page_records($limit, $start, $centro_votacion, $mesa)
+    {
+        $this->db->SELECT ('*');
+        $this->db->FROM('votantes');
+        $this->db->WHERE('codigo_centrovotacion', $centro_votacion);
+        $this->db->WHERE('mesa', $mesa);
+        $this->db->limit($limit, $start);
+        $this->db->order_by("tipo_documento desc, documento_identidad asc");
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)
+        {
+            foreach ($query->result() as $row)
+            {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
+    public function get_total($centro_votacion, $mesa)
+    {
+        $this->db->SELECT ('COUNT(*)');
+        $this->db->FROM('votantes');
+        $this->db->WHERE('codigo_centrovotacion', $centro_votacion);
+        $this->db->WHERE('mesa', $mesa);
+        $query = $this->db->get();
+        foreach ($query->row() as $row)
+        {
+            $result = $row;
+        }
+        return $result;
+        //return $this->db->count_all("votantes");
+    }
+
+    public function getInfoVotante($id) {
+        $query = $this->db->get_where('votantes', array('id' => $id));
+        return $query;
+    }
+
+    public function upddata($data) {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update($table_name, array('voto' => $voto));
+        return true;
+    }
     /**
      * create_user function.
      *
@@ -77,30 +120,25 @@ class User_model extends CI_Model {
      * @param mixed $password
      * @return bool true on success, false on failure
      */
-    public function resolve_user_login($email, $clave, $meson) {
+    public function resolve_user_login($ingreso, $clave, $meson) {
         
-        $this->db->select('clave');
-        $this->db->from('usuario');
-        $this->db->where('correo', $email);
+        $this->db->select('u.clave');
+        $this->db->from('usuario u');
+        $this->db->where('ingreso', $ingreso);
+        
         $this->db->where_in('estatus',array('nuevo', 'activo'));
         $hash = $this->db->get()->row('clave');
         
         if ($this->verify_password_hash($clave, $hash)){
             $this->db->set("meson",$meson);
             $this->db->set("fecha_hora_ultima_conexion",date('Y-m-d H:i:s'));
-            $this->db->where('correo', $email);
+            $this->db->where('id_empleado', $user_id);
             $this->db->update('usuario');
-            
-            
-            
-            
             return true;
         }else{
             return false;
         }
-        
        // return $this->verify_password_hash($clave, $hash);
-        
     }
     
     /**
@@ -110,14 +148,13 @@ class User_model extends CI_Model {
      * @param mixed $username
      * @return int the user id
      */
-    public function get_user_id_from_username($email) {
+    public function get_user_id_from_username($ingreso) {
         
         $this->db->select('id');
         $this->db->from('usuario');
-        $this->db->where('correo', $email);
+        $this->db->where('ingreso', $ingreso);
         
         return $this->db->get()->row('id');
-        
     }
     
     /**
@@ -138,7 +175,6 @@ class User_model extends CI_Model {
         $this->db->join('empleado e', 'e.id = u.id_empleado');
         $this->db->where('u.id',$user_id);
         return $this->db->get()->row();
-        
     }
     
     public function get_user_from_documento($document) {
@@ -152,13 +188,11 @@ class User_model extends CI_Model {
         $this->db->join('usuario u', 'u.id_empleado = e.id');
         $this->db->where('e.documento_identidad',$document);
         $this->db->where_in('u.estatus',array('nuevo', 'activo'));
-        
-        
+
         $query = $this->db->get()->row();
         log_message('info', 'User_model|get_user_from_documento '.$sql = $this->db->last_query());
         log_message('info', 'User_model|get_user_from_documento fin ');
         return $query;
-        
     }
     
     /**
@@ -169,9 +203,7 @@ class User_model extends CI_Model {
      * @return string|bool could be a string on success, or bool false on failure
      */
     private function hash_password($password) {
-        
         return password_hash($password, PASSWORD_BCRYPT);
-        
     }
     
     /**
@@ -183,15 +215,10 @@ class User_model extends CI_Model {
      * @return bool
      */
     private function verify_password_hash($password, $hash) {
-        
         return password_verify($password, $hash);
-        
     }
     
-    
     public function edit_user($user, $employee, $delecte, $reset){
-        
-        
         //$this->db->trans_start();
         //$this->db->trans_complete();
         $this->db->trans_start();
@@ -201,11 +228,10 @@ class User_model extends CI_Model {
             $this->db->set("clave", password_hash("Abcd1234++", PASSWORD_BCRYPT));
             $this->db->set("estatus", "nuevo");
         }
-            
-            //usuario
+        //usuario
         if ($reset){
             $this->db->set("clave", password_hash("Abcd1234++", PASSWORD_BCRYPT));
-            $this->db->set("estatus", "nuevo");
+            $this->db->set("estatus", "activo");
         }
            
             $this->db->set("correo", $user["correo"]);
@@ -246,8 +272,9 @@ class User_model extends CI_Model {
         }else{
             return true;
         }
-        
-        
+
+    }
+
     }
     
-}
+

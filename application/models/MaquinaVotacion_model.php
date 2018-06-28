@@ -39,10 +39,10 @@ class MaquinaVotacion_model extends CI_Model
               `codigo_centrovotacion` varchar(9),
               `centro_votacion` varchar(255),
               `mesa` int(2),
-              `codigo_instalacion` int(6),
-              `codigo_apertura` int(6),
-              `codigo_cierre` int(6),
-              `codigo_transmision` int(6),
+              `codigo_instalacion` varchar(8),
+              `codigo_apertura` varchar(8),
+              `codigo_cierre` varchar(8),
+              `codigo_transmision` varchar(8),
               `modelo_maquina` varchar(9),
               `id_estatus_maquina` int(10),
                 PRIMARY KEY (`id`))");
@@ -138,6 +138,63 @@ class MaquinaVotacion_model extends CI_Model
         }
     }
 
+    public function updateMvEstatusAuditoria($codico_centrovotacion, $mesa)
+    {
+        $this->db->trans_start();
+        $this->db->query("UPDATE maquina_votacion SET 
+                            id_estatus_maquina='7'
+                            WHERE
+                            maquina_votacion.codigo_centrovotacion='". $codico_centrovotacion ."' AND maquina_votacion.mesa='". $mesa ."'");
+
+        $this->db->query("UPDATE proceso
+                            INNER JOIN maquina_votacion ON proceso.id_maquina_votacion=maquina_votacion.id
+                            SET id_fase='6'
+                            WHERE
+                            maquina_votacion.codigo_centrovotacion='". $codico_centrovotacion ."' AND maquina_votacion.mesa='". $mesa ."'");
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function truncateLoadTemplateData()
+    {
+        $this->db->trans_start();
+
+        $this->db->query("DELETE FROM usuario_maquina");
+
+        $this->db->query("DELETE FROM maquina_cargo");
+        $this->db->query("ALTER TABLE maquina_cargo AUTO_INCREMENT = 1");
+
+        $this->db->query("DELETE FROM voto");
+        $this->db->query("ALTER TABLE voto AUTO_INCREMENT = 1");
+
+        $this->db->query("DELETE FROM maquina_votacion");
+        $this->db->query("ALTER TABLE maquina_votacion AUTO_INCREMENT = 1");
+
+        $this->db->query("DELETE FROM proceso");
+        $this->db->query("ALTER TABLE proceso AUTO_INCREMENT = 1");
+
+        $this->db->query("DELETE FROM proceso_error");
+        $this->db->query("ALTER TABLE proceso_error AUTO_INCREMENT = 1");
+
+        $this->db->query("DELETE FROM proceso_reemplazo");
+        $this->db->query("ALTER TABLE proceso_reemplazo AUTO_INCREMENT = 1");
+
+        $this->db->query("UPDATE votantes SET voto = 0 WHERE voto = 1");
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function getTablepaymentsTem($table_name)
     {
         return $this->db->get($table_name);
@@ -156,6 +213,7 @@ class MaquinaVotacion_model extends CI_Model
                                         	mv.centro_votacion,
                                         	mv.mesa,
                                         	mv.modelo_maquina,
+                                        	mv.medio_transmision,
                                             mv.id_estatus_maquina,
                                         	em.descripcion estatus
                                         FROM maquina_votacion mv, estatus_maquina em
@@ -173,7 +231,60 @@ class MaquinaVotacion_model extends CI_Model
         }
         
     }
-    
+
+    public function getErrorsVotingMachine(){
+
+        $result=$this->db->query("SELECT DISTINCT
+                                    proceso.id as proceso_id,
+                                    maquina_votacion.codigo_centrovotacion,
+                                    maquina_votacion.mesa,
+                                    error.descripcion AS error,
+                                    maquina_votacion.modelo_maquina,
+                                    maquina_votacion.medio_transmision,
+                                    estatus_maquina.descripcion AS estatus_maquina,
+                                    tipo_reemplazo.descripcion AS reemplazo
+                                    FROM proceso_error
+                                    INNER JOIN proceso ON proceso_error.id_proceso = proceso.id
+                                    LEFT JOIN proceso_reemplazo ON proceso_error.id = proceso_reemplazo.id_error
+                                    LEFT JOIN tipo_reemplazo ON proceso_reemplazo.id_reemplazo = tipo_reemplazo.id
+                                    INNER JOIN error ON proceso_error.id_error = error.id
+                                    INNER JOIN maquina_votacion ON proceso.id_maquina_votacion = maquina_votacion.id
+                                    INNER JOIN estatus_maquina ON maquina_votacion.id_estatus_maquina = estatus_maquina.id
+                                    ORDER BY maquina_votacion.codigo_centrovotacion");
+
+        if ($result->num_rows()>0){
+
+            return $result;
+
+        }else {
+
+            return null;
+        }
+
+    }
+
+    public function getErrorVotindMahcineById($id) {
+        $result=$this->db->query("SELECT DISTINCT
+                                    error.id, 
+                                    error.descripcion AS error,
+                                    fase.descripcion AS fase,
+                                    tipo_error.descripcion AS tipo_error
+                                    FROM proceso_error
+                                    INNER JOIN fase ON proceso_error.id_fase=fase.id
+                                    INNER JOIN proceso ON proceso_error.id_proceso=proceso.id
+                                    INNER JOIN maquina_votacion ON proceso.id_maquina_votacion=maquina_votacion.id
+                                    INNER JOIN error ON proceso_error.id_error=error.id
+                                    INNER JOIN tipo_error ON error.id_tipo_error=tipo_error.id
+                                    where maquina_votacion.id='".$id."'");
+
+        if ($result->num_rows()>0){
+
+            return $result;
+        }else {
+            return null;
+        }
+    }
+
     public function getDetailVotingMachinebById($id){
         
         $this->db->select('mv.id, mv.codigo_estado, mv.estado, mv.codigo_municipio, mv.municipio, mv.codigo_parroquia, mv.parroquia, 
@@ -201,19 +312,42 @@ class MaquinaVotacion_model extends CI_Model
                                         	em.descripcion estatus
                                         FROM maquina_votacion mv, estatus_maquina em
                                         WHERE mv.id_estatus_maquina=em.id
-                                        AND mv.id=" . $id );
+                                        AND mv.id='" . $id . "'");
         
         if ($result->num_rows()>0){
             
             return $result;
-            
         }else {
-            
             return null;
         }
-        
     }
     
+    public function getDetailauditMachine($id){
+        
+        $result=$this->db->query("SELECT 	mv.id,
+                                            mv.codigo_estado,
+                                        	mv.estado,
+                                        	mv.codigo_municipio,
+                                        	mv.municipio,
+                                        	mv.codigo_parroquia,
+                                        	mv.parroquia,
+                                        	mv.codigo_centrovotacion,
+                                        	mv.centro_votacion,
+                                        	mv.mesa,
+                                        	mv.modelo_maquina,
+                                            mv.id_estatus_maquina,
+                                        	em.descripcion estatus
+                                        FROM maquina_votacion mv, estatus_maquina em
+                                        WHERE mv.id_estatus_maquina=em.id
+                                        AND mv.id='" . $id . "'");
+        
+        if ($result->num_rows()>0){
+            
+            return $result;
+        }else {
+            return null;
+        }
+    }
     public function getCodigoByStatusId($estatus,$id){
         
         switch ($estatus) {
@@ -245,12 +379,29 @@ class MaquinaVotacion_model extends CI_Model
         $this->db->set("medio_transmision",NULL);
         $this->db->where("id",$idmaquina);
         $this->db->update("maquina_votacion");
-        
+
+        $this->db->select("codigo_centrovotacion, mesa");
+        $this->db->where("id",$idmaquina);
+
+        $consulta = $this->db->get("maquina_votacion");
+        $geografico = $consulta->result();
+
+        // reiniciamos los votantes
+        $this->db->set("voto", 0);
+        $this->db->where("codigo_centrovotacion", $geografico[0]->codigo_centrovotacion);
+        $this->db->where("mesa", $geografico[0]->mesa);
+        $this->db->update("votantes");
+
+        // obtenemos todos los procesos registrados de una mv
         $this->db->select("id");
         $this->db->where("id_maquina_votacion",$idmaquina);
         $procesos = $this->db->get("proceso");
-        //echo $this->db->last_query();
-        
+
+        //borramos los votos registrados para esa mv
+        $this->db->query("DELETE FROM voto WHERE id_maquina = '" . $idmaquina . "'");
+        $this->db->query("ALTER TABLE voto AUTO_INCREMENT = 1");
+
+
         foreach ($procesos->result() as $proceso){
            
            //eliminamos los errores
@@ -269,9 +420,7 @@ class MaquinaVotacion_model extends CI_Model
             $this->db->where("id_maquina",$idmaquina);
             $this->db->delete("usuario_maquina");
         }
-        
-        
-        
+
         $this->db->trans_complete();
         
         if ($this->db->trans_status() === FALSE){
@@ -296,10 +445,9 @@ class MaquinaVotacion_model extends CI_Model
     public function getCountModeloEstatus(){
         
         $result=$this->db->query("SELECT mv.modelo_maquina, em.descripcion estatus, COUNT(*) cantidad
-                            FROM maquina_votacion mv, estatus_maquina em
-                            WHERE em.id = mv.id_estatus_maquina
-                            GROUP BY mv.id_estatus_maquina,mv.modelo_maquina");
-        
+                                FROM maquina_votacion mv, estatus_maquina em
+                                WHERE em.id = mv.id_estatus_maquina
+                                GROUP BY mv.id_estatus_maquina,mv.modelo_maquina");
         if ($result->num_rows()>0){
             
             return $result;

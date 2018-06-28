@@ -1,6 +1,4 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
-
 </br>
 <div class="container">
 	<div class="col-md-20">
@@ -41,10 +39,10 @@
 				<tr>
 					<td><?= $records["modelo_maquina"]?></td>
 					<td>
-    					<? 
+    					<?php
     					if(isset($records["SELECCIONADA"])){
     					    echo $records["SELECCIONADA"];
-    					}else{
+    					} else {
     					    echo "0";
     					}
     					?>
@@ -71,7 +69,7 @@
 					</td>
 					
 					<td>
-						<? 
+						<?php
     					if(isset($records["INSTALADA"])){
     					    echo $records["INSTALADA"];
     					}else{
@@ -99,7 +97,7 @@
 					?>
 					</td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["APERTURADA"])){
     					    echo $records["APERTURADA"];
     					}else{
@@ -127,7 +125,7 @@
 					?>
 					</td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["VOTACION"])){
     					    echo $records["VOTACION"];
     					}else{
@@ -155,7 +153,7 @@
 					?>
 					</td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["CERRADA"])){
     					    echo $records["CERRADA"];
     					}else{
@@ -177,16 +175,16 @@
 					        }
 					    }
 					    
-					}else {
+					} else {
 					    echo "0 %";
 					}
 					?>
 					</td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["TRANSMITIDA"])){
     					    echo $records["TRANSMITIDA"];
-    					}else{
+    					} else{
     					    echo "0";
     					}
     					?>
@@ -239,7 +237,7 @@
 				<tr>
 					<td><?= $records["modelo_maquina"]?></td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["CDMA1x"])){
     					    echo $records["CDMA1x"];
     					}else{
@@ -267,10 +265,10 @@
 					?>
 					</td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["DIAL UP"])){
     					    echo $records["DIAL UP"];
-    					}else{
+    					} else{
     					    echo "0";
     					}
     					?>
@@ -289,16 +287,16 @@
 					        }
 					    }
 					    
-					}else {
+					} else {
 					    echo "0 %";
 					}
 					?>
 					</td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["VSAT"])){
     					    echo $records["VSAT"];
-    					}else{
+    					} else {
     					    echo "0";
     					}
     					?>
@@ -317,16 +315,16 @@
 					        }
 					    }
 					    
-					}else {
+					} else {
 					    echo "0 %";
 					}
 					?>
 					</td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["Manual"])){
     					    echo $records["Manual"];
-    					}else{
+    					} else {
     					    echo "0";
     					}
     					?>
@@ -345,13 +343,11 @@
 					        }
 					    }
 					    
-					}else {
+					} else {
 					    echo "0 %";
 					}
 					?>
 					</td>
-					
-
 				</tr>
 				<?php }
 				}?>
@@ -380,10 +376,10 @@
 				<tr>
 					<td><?= $records["modelo_maquina"]?></td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["MAQUINA VOTACION"])){
     					    echo $records["MAQUINA VOTACION"];
-    					}else{
+    					} else {
     					    echo "0";
     					}
     					?>
@@ -402,16 +398,16 @@
 					        }
 					    }
 					    
-					}else {
+					} else {
 					    echo "0 %";
 					}
 					?>
 					</td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["SAI"])){
     					    echo $records["SAI"];
-    					}else{
+    					} else {
     					    echo "0";
     					}
     					?>
@@ -430,16 +426,16 @@
 					        }
 					    }
 					    
-					}else {
+					} else {
 					    echo "0 %";
 					}
 					?>
 					</td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["MEMORIA"])){
     					    echo $records["MEMORIA"];
-    					}else{
+    					} else {
     					    echo "0";
     					}
     					?>
@@ -458,16 +454,16 @@
 					        }
 					    }
 					    
-					}else {
+					} else {
 					    echo "0 %";
 					}
 					?>
 					</td>
 					<td>
-						<? 
+						<?php
     					if(isset($records["BOLETA"])){
     					    echo $records["BOLETA"];
-    					}else{
+    					} else {
     					    echo "0";
     					}
     					?>
@@ -485,8 +481,7 @@
 					                echo $arratporcentaje[0]." %";
 					        }
 					    }
-					    
-					}else {
+					} else {
 					    echo "0 %";
 					}
 					?>
@@ -495,13 +490,8 @@
 				</tr>
 				<?php }
 				}?>
-
-
 			</tbody>
 		</table>
-		
-		
-		
 		
 		<table id="dataTable">
 			<thead>
@@ -520,37 +510,35 @@
 				       	<?php if (isset($totalErrorTipo)){
 				       	    foreach ($totalErrorTipo->result() as $totalErrorTipos){?>
 				       	        <td>
-				       	        <?php 
-				       	        
+				       	        <?php
 				       	        $porcentaje = number_format($countErrors->cantidad * 100 /$totalErrorTipos->cantidad, 2, '.', ' ');
     				       	        $arratporcentaje = explode(".",$porcentaje);
-    				       	        if ($arratporcentaje[1]> 0)
+    				       	        if ($arratporcentaje[1]> 0) {
     				       	            echo $porcentaje." %";
-    				       	        else
+                                    }
+    				       	        else {
     				       	           echo $arratporcentaje[0]." %";
-				       	        
+                                    }
 				       	        ?>
-				       	        
 				       	        </td>
 				       	   <?php  }
 				       	}?>
 				        </tr>
 				  <?php   }
-				}?>
-
+				} else { ?>
+                    <tr>
+                        <td colspan="3">N/A</td>
+                    </tr>
+                <?php } ?>
 			</tbody>
 		</table>
-</div>
-</div>
-		
-		
-
-
-		<div class="small-12 column text-right buttonPanel">
-			<input type="submit" id="btnEnviar" class="button small right"
-				value="Aceptar" formaction="<?= base_url()?>"/>
-		</div>
-		<?= form_close()?>
+            <div class="small-12 column text-right buttonPanel">
+                <input type="submit" id="btnEnviar" class="button small right"
+                       value="Aceptar" formaction="<?= base_url()?>"/>
+            </div>
+            <?= form_close()?>
+        </div>
+        </div>
 
 	</div>
 </div>
