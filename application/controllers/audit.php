@@ -138,6 +138,7 @@ class audit extends CI_Controller{
 
     public function procesar()
     {
+        //var_dump($_POST);
         if ($this->input->post('id') != null) {
             $idmaquina = $this->input->post('id'); // anteriormente se obtenía el valor por la constante post, sin embargo se perdía el valor cuando se actualizaba la páginación.
         } else {
@@ -150,11 +151,12 @@ class audit extends CI_Controller{
 
         foreach ($_POST as $clave=>$valor) {
             if ($valor !== "" && $clave != "id" && $clave != "codigo_centrovotacion" && $clave != "mesa" && $clave != "estatus") {
-
-                if ($valor == 0) {
-                    $result =  $this->Audit_model->saveVotesAuditNull($current, null, $idmaquina, 0);
+                $arr1 = str_split($valor);
+                var_dump($arr1);
+                if ($arr1[0] == 0) {
+                    $result =  $this->Audit_model->saveVotesAuditNull($current, null, $idmaquina, $arr1[3], 0);
                 } else {
-                    $result =  $this->Audit_model->saveVotesAudit($current, $valor, $idmaquina, 1);
+                    $result =  $this->Audit_model->saveVotesAudit($current, $valor, $idmaquina, $arr1[3], 1);
                 }
             }
         }

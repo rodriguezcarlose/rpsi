@@ -64,10 +64,10 @@ class Audit_model extends CI_Model {
         
     }
 
-    public function saveVotesAuditNull($cod_voto, $id_boleta, $id_maquina, $estatus) {
+    public function saveVotesAuditNull($cod_voto, $id_boleta, $id_maquina, $id_cargo, $estatus) {
 
-        $result=$this->db->query("INSERT INTO voto (cod_voto, id_opcion_boleta, id_maquina, estatus) 
-                                  VALUES (" . $cod_voto . ", null, " . $id_maquina . ", 0 )");
+        $result=$this->db->query("INSERT INTO voto (cod_voto, id_opcion_boleta, id_maquina, id_cargo, estatus) 
+                                  VALUES (" . $cod_voto . ", null, " . $id_maquina . ", " . $id_cargo . ", 0 )");
         if ($result){
             return $result;
         }else {
@@ -76,10 +76,10 @@ class Audit_model extends CI_Model {
 
     }
 
-    public function saveVotesAudit($cod_voto, $id_boleta, $id_maquina, $estatus) {
+    public function saveVotesAudit($cod_voto, $id_boleta, $id_maquina, $id_cargo, $estatus) {
 
-        $result=$this->db->query("INSERT INTO voto (cod_voto, id_opcion_boleta, id_maquina, estatus) 
-                                  VALUES ('" . $cod_voto . "', '" . $id_boleta . "', '" . $id_maquina . "', '" . $estatus . "')");
+        $result=$this->db->query("INSERT INTO voto (cod_voto, id_opcion_boleta, id_maquina, id_cargo, estatus) 
+                                  VALUES ('" . $cod_voto . "', '" . $id_boleta . "', '" . $id_maquina . "', '" . $id_cargo . "', '" . $estatus . "')");
         if ($result){
             return $result;
         }else {
@@ -125,6 +125,40 @@ class Audit_model extends CI_Model {
                                 WHERE id_maquina = '" . $id_maquina . "'
                                 GROUP BY organizacion_politica.siglas
                                 order by cargo.descripcion, candidato.candidato");
+        if ($result->num_rows()>0) {
+            return $result;
+        } else {
+            return null;
+        }
+    }
+
+    public function geCargosByMvAudit($id_maquina) {
+
+        $result=$this->db->query("SELECT DISTINCT id_cargo
+                                                    FROM voto
+                                                    WHERE id_maquina = '" . $id_maquina . "'");
+        if ($result->num_rows()>0) {
+            return $result;
+        } else {
+            return null;
+        }
+    }
+
+    public function geVotosByCargosAudit($id_maquina, $id_cargo) {
+        $result=$this->db->query("SELECT COUNT(*) AS num_votos,
+                                     cargo.descripcion AS cargo,
+                                     organizacion_politica.siglas AS organizacion_politica,
+                                     candidato.candidato AS candidato
+                                    FROM voto
+                                    LEFT JOIN opcion_boleta ON id_opcion_boleta = opcion_boleta.id
+                                    LEFT JOIN postulacion ON opcion_boleta.id_postulacion = postulacion.id
+                                    LEFT JOIN cargo ON voto.id_cargo = cargo.id
+                                    LEFT JOIN candidato ON postulacion.id_candidato = candidato.id
+                                    LEFT JOIN organizacion_politica ON opcion_boleta.id_organizacion_politica = organizacion_politica.id
+                                    WHERE voto.id_cargo='" . $id_cargo . "' AND voto.id_maquina='" . $id_maquina . "'
+                                    GROUP BY candidato.candidato
+                                    ORDER BY candidato.candidato, organizacion_politica.siglas");
+
         if ($result->num_rows()>0) {
             return $result;
         } else {

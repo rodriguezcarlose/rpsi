@@ -225,35 +225,57 @@ class Report extends CI_Controller
 
         $consulta_votos_auditoria = $this->Audit_model->getVotesAuditReportPDFByMv($this->input->post('id'));
 
-        $consulta_votos_totales = $this->Audit_model->getTotalVotes($this->input->post('id'));
-        $consulta_votos_nulos = $this->Audit_model->getTotalVotesNull($this->input->post('id'));
-        $consulta_votos_validos = $this->Audit_model->getTotalVotesValides($this->input->post('id'));
+        $consulta_cargos_votos = $this->Audit_model->geCargosByMvAudit($this->input->post('id'));
 
-        $operador = $this->Contingencia_model->getEmpleado($_SESSION["id"]);
+        $arr = array();
 
-        $dataVotingMachine = array(
-            'consulta' => $result,
-            'consulta_votos_auditoria' => $consulta_votos_auditoria,
-            'consulta_votos_totales' => $consulta_votos_totales->result_array(),
-            'consulta_votos_nulos' => $consulta_votos_nulos->result_array(),
-            'consulta_votos_validos' => $consulta_votos_validos->result_array(),
-            'user' => $operador
-        );
-        //load the view and saved it into $html variable
-        $html=$this->load->view('report/report_audit_pdf', $dataVotingMachine, true);
+        foreach ($consulta_cargos_votos->result() as $item) {
+            $arr = $this->Audit_model->geVotosByCargosAudit($this->input->post('id'), $item->id_cargo);
 
-        //this the the PDF filename that user will get to download
-        $time = time();
-        $pdfFilePath = "reporte_auditoria_mv_". $centrovotacion . "_" . $mesa . ".pdf";
+            if (count($arr->result()) == 2) {
+                $consulta_votos_totales = $arr->result()[0]->num_votos + $arr->result()[1]->num_votos;
+                $consulta_votos_validos = $arr->result()[1]->num_votos;
+                $consulta_votos_nulos = $arr->result()[0]->num_votos;
+            } else {
+                if (count($arr->result()) == 1) {
+                    $consulta_votos_totales = $arr->result()[0]->num_votos;
+                    $consulta_votos_validos = $arr->result()[0]->num_votos;
+                    $consulta_votos_nulos = 0;
+                } else {
+                    if (count($arr->result()) == 0) {
+                        $consulta_votos_totales = 0;
+                        $consulta_votos_validos = 0;
+                        $consulta_votos_nulos = 0;
+                    }
+                }
+            }
+            $operador = $this->Contingencia_model->getEmpleado($_SESSION["id"]);
 
-        //load mPDF library
-        $this->load->library('m_pdf');
+            $dataVotingMachine = array(
+                'consulta' => $result,
+                'consulta_votos_auditoria' => $arr,
+                'consulta_votos_totales' => $consulta_votos_totales,
+                'consulta_votos_nulos' => $consulta_votos_nulos,
+                'consulta_votos_validos' => $consulta_votos_validos,
+                'user' => $operador
+            );
+            //load the view and saved it into $html variable
+            $html = $this->load->view('report/report_audit_pdf', $dataVotingMachine, true);
 
-        //generate the PDF from the given html
-        $this->m_pdf->pdf->WriteHTML($html);
+            //this the the PDF filename that user will get to download
+            $time = time();
+            $pdfFilePath = "reporte_auditoria_mv_" . $centrovotacion . "_" . $mesa . ".pdf";
 
-        //download it.
-        $this->m_pdf->pdf->Output($pdfFilePath, "D");
+            //load mPDF library
+            $this->load->library('m_pdf');
+
+            //generate the PDF from the given html
+            $this->m_pdf->pdf->WriteHTML($html);
+
+            //download it.
+            $this->m_pdf->pdf->Output($pdfFilePath, "D");
+        }
+
     }
 
     public function errors_mv() {

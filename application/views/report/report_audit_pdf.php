@@ -27,15 +27,15 @@
         }
 
         if (!is_null($consulta_votos_totales)) {
-            $votos_auditoria_totales = $consulta_votos_totales[0]["COUNT(*)"];
+            $votos_auditoria_totales = $consulta_votos_totales;
         }
 
         if (!is_null($consulta_votos_nulos)) {
-            $votos_auditoria_nulos = $consulta_votos_nulos[0]["COUNT(*)"];
+            $votos_auditoria_nulos = $consulta_votos_nulos;
         }
 
         if (!is_null($consulta_votos_validos)) {
-            $votos_auditoria_validos = $consulta_votos_validos[0]["COUNT(*)"];
+            $votos_auditoria_validos = $consulta_votos_validos;
         }
 
         $operador = $user->result();
@@ -83,26 +83,31 @@
             if (isset($votos_auditoria)) {
                 $cargo = '';
                 $candidato = '';
+
                 foreach ($votos_auditoria as $item) {
-                    if ($cargo != $item->cargo) {
+
+                    $tmp_canditato = is_null($item->candidato) ? 'VOTO NULO' : $item->candidato;
+                    $tmp_cargo = is_null($item->cargo) ? 'VOTO NULO' : $item->cargo;
+
+                    if ($cargo != $tmp_cargo) {
                         if ($candidato != ''){
                             echo "</tbody>";
                             echo "</table>";
                         }
                         $candidato = '';
-                        $cargo = $item->cargo;
-                        echo "<h4> - $item->cargo </h4>";
+                        $cargo = $tmp_cargo;
+                        echo "<h4> - $tmp_cargo </h4>";
                     }
-                    if ($candidato != $item->candidato) {
+                    if ($candidato != $tmp_canditato) {
                         if ($candidato != ''){
                             echo "</tbody>";
                             echo "</table>";
                         }
-                        $candidato = $item->candidato;
+                        $candidato = $tmp_canditato;
                         echo "<table id='dataTable'>";
                         echo "<thead>";
                         echo "<tr>";
-                        echo "<td colspan='2' style='color: #007095'>$item->candidato</td>";
+                        echo "<td colspan='2' style='color: #007095'>$tmp_canditato</td>";
                         echo "</tr>";
                         echo "<tr>";
                         echo "<td>ORGANIZACIÓN POLÍTICA</td>";
