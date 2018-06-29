@@ -152,7 +152,7 @@ class audit extends CI_Controller{
         foreach ($_POST as $clave=>$valor) {
             if ($valor !== "" && $clave != "id" && $clave != "codigo_centrovotacion" && $clave != "mesa" && $clave != "estatus") {
                 $arr1 = str_split($valor);
-                var_dump($arr1);
+             
                 if ($arr1[0] == 0) {
                     $result =  $this->Audit_model->saveVotesAuditNull($current, null, $idmaquina, $arr1[3], 0);
                 } else {
