@@ -1,13 +1,11 @@
 <?php
 
 // session_start(); //we need to start session in order to access it through CI
-class Voting_machine extends CI_Controller
-{
+class Voting_machine extends CI_Controller {
 
     private $data;
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         
         if ($this->uri->uri_string()) {
@@ -58,8 +56,7 @@ class Voting_machine extends CI_Controller
     }
 
     // Show login page
-    public function index()
-    {
+    public function index() {
         $data = new stdClass();
         if ($this->UsuarioMaquina_model->getCountUsuario($_SESSION['id']) > 0) {
             $idmaquina = $this->UsuarioMaquina_model->getMaquinaIDByUser($_SESSION['id']);
@@ -82,8 +79,7 @@ class Voting_machine extends CI_Controller
         }
     }
 
-    public function consultar()
-    {
+    public function consultar() {
         $data = new stdClass();
         $this->form_validation->set_rules('codigo_centrovotacionmesa', 'C&oacute;digo de centro de votacion', 'trim|required|xss_clean|exact_length[14]', array(
             'required' => 'El centro de votaci&oacute;n es requerido',
@@ -153,11 +149,16 @@ class Voting_machine extends CI_Controller
         }
     }
 
-    public function seleccionada()
-    {
-        //echo("<script>console.log('id_maquina: ".json_encode($idmaquina)."');</script>");
+    public function seleccionada() {
+
+
+        //$data = new stdClass();
+        if ($this->data == null) {
+            $data = new stdClass();
+        } else {
         $data = $this->data;
-        $data = new stdClass();
+        }
+        //$data = new stdClass();
         $erroresseleccionados = array();
 
         if ($this->input->post('id') != null) {
@@ -201,8 +202,7 @@ class Voting_machine extends CI_Controller
             $limit_per_page = 10;
             $start_index = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
             $total_records = $this->User_model->get_total($centro_votacion, $mesa);
-            if ($total_records > 0)
-            {
+            if ($total_records > 0) {
                 // get current page records
                 $data->votantes = $this->User_model->get_current_page_records($limit_per_page, $start_index, $centro_votacion, $mesa);
                 $config['base_url'] = base_url() . 'index.php/voting_machine/seleccionada';
@@ -258,20 +258,16 @@ class Voting_machine extends CI_Controller
             'voto' => $votante_estatus
         );
 
-        if($this->User_model->upddata($data)) // call the method from the model
-        {
+        if ($this->User_model->upddata($data)) { // call the method from the model
             // update successful
             echo("<script>console.log('update successful');</script>");
-        }
-        else
-        {
+        } else {
             // update not successful
             echo("<script>console.log('update not successful');</script>");
         }
     }
 
-    public function resettest()
-    {
+    public function resettest() {
         log_message('info', 'Voting_machine|resettest|inicio');
         $data = new stdClass();
         $seleccionada = 1;
@@ -328,8 +324,7 @@ class Voting_machine extends CI_Controller
         log_message('info', 'Voting_machine|resettest|fin');
     }
 
-    public function consulta_lista_errores()
-    {
+    public function consulta_lista_errores() {
         $data = new stdClass();
         $result = $this->RegistroPruebaDatabase_model->consulta_errores();
         if ($result == TRUE) {
@@ -347,8 +342,7 @@ class Voting_machine extends CI_Controller
         }
     }
 
-    public function procesar()
-    {
+    public function procesar() {
         $data = new stdClass();
         $errosrselect = array();
         $erroresseleccionados = array();
@@ -511,43 +505,40 @@ class Voting_machine extends CI_Controller
                             "fecha" => date('Y-m-d H:i:s')
                         ];
                         array_push($procesoError, $errorselect);
-                        
-                      /*  $reemplazo = null;
-                        $result = $this->Error_model->getTipoErrorById($error);
-                        
-                        if ($tipoErrorSelect->id_tipo_error == "2") {
-                            $reemplazo = $this->input->post('tiporeemplazo');
-                        }
-                        
-                        if ($reemplazo !== null) {
-                            $errorselect = [
-                                "id_proceso" => "",
-                                "id_error" => $error,
-                                "id_tipo_reemplazo" => $reemplazo,
-                                "fecha" => date('Y-m-d H:i:s')
-                            ];
-                        } else {
-                            $errorselect = [
-                                "id_proceso" => "",
-                                "id_error" => $error,
-                                "fecha" => date('Y-m-d H:i:s')
-                            ];
-                        }
-                        
-                        array_push($procesoError, $errorselect);*/
                     }
+                        
+                        }
+                        
+
+                // if ($codigo === $this->input->post('codigo') || $this->input->post('idestatusmaquina') === "3") {
+                if ($codigo === $this->input->post('codigo')) {
+                    if ($this->Proceso_model->countProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase) > 0) {
+                        $idproceso = $this->Proceso_model->getIdProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase);
+                        $this->Proceso_model->updateProceso($proceso, $procesoError, $idproxEstatus, $this->input->post('medio'), $idproceso, $this->input->post('tiporeemplazo'));
+                        } else {
+                        $this->Proceso_model->insertproceso($proceso, $procesoError, $idproxEstatus, $this->input->post('medio'), $this->input->post('tiporeemplazo'));
+                        }
+                    $data->success = "Se ha registrado con &eacute;xito el proceso de " . $proxEstatus . " de la m&aacute;quina.";
+                } else if ($this->input->post('idestatusmaquina') === "3") {
+                    if ($cantError > 0) {
+                        if ($this->Proceso_model->countProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase) > 0) {
+                            $idproceso = $this->Proceso_model->getIdProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase);
+                            $this->Proceso_model->updateProceso($proceso, $procesoError, $this->input->post('idestatusmaquina'), $this->input->post('medio'), $idproceso, $this->input->post('tiporeemplazo'));
+                        } else {
+                            $this->Proceso_model->insertproceso($proceso, $procesoError, $this->input->post('idestatusmaquina'), $this->input->post('medio'), $this->input->post('tiporeemplazo'));
                 }
-                
-                if ($codigo === $this->input->post('codigo') || $this->input->post('idestatusmaquina') === "3") {
+                        $data->success = "Se ha registrado con &eacute;xito el error en el proceso  " .$proxEstatus . " de la m&aacute;quina. La m&aacute;quina se mantendr&aacute; en este proceso.";
+                    } else {
                     
                     if ($this->Proceso_model->countProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase) > 0) {
                         $idproceso = $this->Proceso_model->getIdProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase);
                         $this->Proceso_model->updateProceso($proceso, $procesoError, $idproxEstatus, $this->input->post('medio'), $idproceso,$this->input->post('tiporeemplazo'));
                     } else {
                         $this->Proceso_model->insertproceso($proceso, $procesoError, $idproxEstatus, $this->input->post('medio'),$this->input->post('tiporeemplazo'));
+                        }
+                        $data->success = "Se ha registrado con &eacute;xito el proceso de " . $proxEstatus . " de la m&aacute;quina.";
                     }
                 } else {
-                    //echo "Aqui ----> " . $this->Proceso_model->countProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase);
                     
                     if ($this->Proceso_model->countProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase) > 0) {
                         $idproceso = $this->Proceso_model->getIdProcesoByIdMaquina($proceso["id_maquina_votacion"], $_SESSION['id'], $fase);
@@ -556,6 +547,7 @@ class Voting_machine extends CI_Controller
                         
                         $this->Proceso_model->insertproceso($proceso, $procesoError, $this->input->post('idestatusmaquina'), $this->input->post('medio'),$this->input->post('tiporeemplazo'));
                     }
+                    $data->success = "Se ha registrado con &eacute;xito el error en el proceso  " .$proxEstatus . " de la m&aacute;quina.";
                 }
                 // des selecionamos la máquina del usurio
                 
@@ -565,8 +557,8 @@ class Voting_machine extends CI_Controller
                 $usuariomaquina["id_maquina"] = $this->input->post('id');
                 //$this->UsuarioMaquina_model->desSelccionarMesa($usuariomaquina);
                 
-                $data = new stdClass();
-                $data->success = "Se ha registrado con &eacute;xito el proceso de ".$proxEstatus." de la m&aacute;quina.";
+                //$data = new stdClass();
+                //$data->success = "Se ha registrado con &eacute;xito el proceso de " . $proxEstatus . " de la m&aacute;quina.";
                 $this->data = $data;
                // $this->index();
                 $this->seleccionada();
@@ -574,8 +566,7 @@ class Voting_machine extends CI_Controller
         }
     }
 
-    public function cancelar()
-    {
+    public function cancelar() {
         $usuariomaquina = array();
         $usuariomaquina["id_usuario"] = $_SESSION['id'];
         $usuariomaquina["id_maquina"] = $this->input->post('id');

@@ -360,6 +360,9 @@ class MaquinaVotacion_model extends CI_Model
             case "APERTURADA":
                 $this->db->select("codigo_cierre");
                 break;
+            case "VOTACION":
+                $this->db->select("codigo_cierre");
+                break;
             case "CERRADA":
                 $this->db->select("codigo_transmision");
                 break;

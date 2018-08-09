@@ -18,8 +18,7 @@ class User_model extends CI_Model {
         $this->load->database();
     }
 
-    public function get_current_page_records($limit, $start, $centro_votacion, $mesa)
-    {
+    public function get_current_page_records($limit, $start, $centro_votacion, $mesa) {
         $this->db->SELECT ('*');
         $this->db->FROM('votantes');
         $this->db->WHERE('codigo_centrovotacion', $centro_votacion);
@@ -27,10 +26,8 @@ class User_model extends CI_Model {
         $this->db->limit($limit, $start);
         $this->db->order_by("tipo_documento desc, documento_identidad asc");
         $query = $this->db->get();
-        if ($query->num_rows() > 0)
-        {
-            foreach ($query->result() as $row)
-            {
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
                 $data[] = $row;
             }
             return $data;
@@ -38,15 +35,13 @@ class User_model extends CI_Model {
         return false;
     }
 
-    public function get_total($centro_votacion, $mesa)
-    {
+    public function get_total($centro_votacion, $mesa) {
         $this->db->SELECT ('COUNT(*)');
         $this->db->FROM('votantes');
         $this->db->WHERE('codigo_centrovotacion', $centro_votacion);
         $this->db->WHERE('mesa', $mesa);
         $query = $this->db->get();
-        foreach ($query->row() as $row)
-        {
+        foreach ($query->row() as $row) {
             $result = $row;
         }
         return $result;
@@ -82,10 +77,12 @@ class User_model extends CI_Model {
         }
         
         //validamos si ya existe un usuario con el mimso correo
+        if (!empty($usuario["correo"])) {
         $this->db->where("correo", $usuario["correo"]);
-        if( $this->db->count_all_results('usuario') > 0)
+            if ($this->db->count_all_results('usuario') > 0) {
             return 2;
-            
+            }
+        }
             $this->db->trans_start();
             //$this->db->insert_batch("empleado", $empleado);
             $this->db->insert('empleado', $empleado);
@@ -183,7 +180,7 @@ class User_model extends CI_Model {
          $this->db->where('id', $user_id);
          return $this->db->get()->row();*/
         log_message('info', 'User_model|get_user_from_documento inicio ');
-        $this->db->select('u.id as id_usuario, u.correo, u.estatus,e.id as id_empleado, e.nombre, e.apellido, e.id_cargo, e.documento_identidad, e.id_tipo_documento,u.id_rol');
+        $this->db->select('u.id as id_usuario, u.correo, u.estatus, u.ingreso, e.id as id_empleado, e.nombre, e.apellido, e.id_cargo, e.documento_identidad, e.id_tipo_documento,u.id_rol');
         $this->db->from('empleado e');
         $this->db->join('usuario u', 'u.id_empleado = e.id');
         $this->db->where('e.documento_identidad',$document);
@@ -236,6 +233,7 @@ class User_model extends CI_Model {
            
             $this->db->set("correo", $user["correo"]);
             $this->db->set("id_rol", $user["id_rol"]);
+        $this->db->set("ingreso", $user["ingreso"]);
             $this->db->where("id",$user["id"]);
             $this->db->update('usuario');
             

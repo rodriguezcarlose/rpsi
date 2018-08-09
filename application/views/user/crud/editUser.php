@@ -31,15 +31,7 @@
     				<input id="id_empleado" name="id_empleado" type="hidden" value="<?= isset($id_empleado)?$id_empleado:""; ?>">
     				
     				<div class="field small-3 columns">
-                		<label for="String:">Nombre:</label>
-                		<input id="nombre" name="nombre" type="text" value="<?= isset($nombre)?$nombre:""; ?>"/>
-            		</div>
-            		<div class="field small-3 columns">
-                		<label for="String:">Apellido:</label>
-                		<input id="apellido" name="apellido" type="text" value="<?= isset($apellido)?$apellido:""; ?>" />
-            		</div>
             		
-            		 <div class="field small-3 columns">
                 		<label for="String:">Tipo Documento:</label>
                 		<select id="tipo_doc" name="tipo_doc" >
     						<?php 
@@ -75,8 +67,20 @@
                 		<label for="String:">Documento Identidad:</label>
                 		<input id="documento" name="documento" type="text" value="<?= isset($documento)?$documento:""; ?>" maxlength = "9" onkeypress="return validar_texto(event)"/>
             		</div>
+                 <div class="field small-3 columns">
+                    <label for="String:">Nombre:</label>
+                    <input id="nombre" name="nombre" type="text" value="<?= isset($nombre) ? $nombre : ""; ?>"/>
+                </div>
+                <div class="field small-3 columns">
+                    <label for="String:">Apellido:</label>
+                    <input id="apellido" name="apellido" type="text" value="<?= isset($apellido) ? $apellido : ""; ?>" />
+                </div>
             		
             		 <div class="field small-3 columns">
+                    <label for="username">Login:</label>
+                    <input id="login" name="login" type="text" value="<?= isset($login) ? $login : ""; ?>" maxlength = "15"/>
+                </div> 
+                <div class="field small-3 columns">
     					<label for="username">Email:</label>
     					<input id="email" name="email" type="text" value="<?= isset($email)?$email:""; ?>"/>
     				</div>        		

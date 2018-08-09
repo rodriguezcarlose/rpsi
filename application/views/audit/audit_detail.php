@@ -87,7 +87,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
 
         <?php if (!$auditoria_status) { ?>
-            <div class="small-1 column right buttonPanel<br>">
+            <div class="small-12 column right buttonPanel">
                 <input id="btnEnviar" class="button small right" value="Registrar" type="submit">
             </div>
         <?php } ?>
