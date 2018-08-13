@@ -180,7 +180,7 @@ class Audit_model extends CI_Model {
                                     INNER JOIN candidato ON postulacion.id_candidato=candidato.id
                                     INNER JOIN organizacion_politica ON opcion_boleta.id_organizacion_politica=organizacion_politica.id
                                     WHERE codigo_centrovotacion='" . $codigo_centrovotacion . "' AND mesa='" . $mesa . "'
-                                    ORDER BY opcion_boleta.orden ASC");
+                                    ORDER BY cargo.orden_cargo ASC");
 
         if ($result->num_rows()>0) {
             return $result;
