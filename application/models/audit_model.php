@@ -78,8 +78,10 @@ class Audit_model extends CI_Model {
 
     public function saveVotesAudit($cod_voto, $id_boleta, $id_maquina, $id_cargo, $estatus) {
 
-        $result=$this->db->query("INSERT INTO voto (cod_voto, id_opcion_boleta, id_maquina, id_cargo, estatus) 
+        $query = ("INSERT INTO voto (cod_voto, id_opcion_boleta, id_maquina, id_cargo, estatus) 
                                   VALUES ('" . $cod_voto . "', '" . $id_boleta . "', '" . $id_maquina . "', '" . $id_cargo . "', '" . $estatus . "')");
+        //echo $query;
+        $result = $this->db->query($query);
         if ($result){
             return $result;
         }else {
@@ -166,6 +168,19 @@ class Audit_model extends CI_Model {
         }
     }
 
+    public function getCantidadCargosXCentroMesa($codigo_centrovotacion, $mesa) {
+        $result = $this->db->query("select distinct cargo.id, cargo.descripcion
+                                    from opcion_boleta
+                                    INNER JOIN postulacion ON opcion_boleta.id_postulacion = postulacion.id
+                                    INNER JOIN cargo ON postulacion.id_cargo = cargo.id
+                                    where codigo_centrovotacion = '" . $codigo_centrovotacion . "'
+                                    and mesa = '" . $mesa . "'");
+        if ($result->num_rows() > 0) {
+            return $result;
+        } else {
+            return null;
+        }
+    }
     public function getCargoCandidatoParido($codigo_centrovotacion, $mesa) {
 
         $result=$this->db->query("SELECT

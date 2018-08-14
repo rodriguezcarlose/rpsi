@@ -1,7 +1,6 @@
 <?php 
 class audit extends CI_Controller{
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         // load db
         $this->load->database();
@@ -30,8 +29,7 @@ class audit extends CI_Controller{
         $this->load->model('Audit_model');
     }
 
-    public function consultar()
-    {
+    public function consultar() {
         $data = new stdClass();
         $this->form_validation->set_rules('codigo_centrovotacionmesa', 'C&oacute;digo de centro de votacion', 'trim|required|xss_clean|exact_length[14]', array(
             'required' => 'El centro de votaci&oacute;n es requerido',
@@ -102,8 +100,7 @@ class audit extends CI_Controller{
         }
     }
     
-    public function consultada()
-    {
+    public function consultada() {
         if ($this->input->post('id') != null) {
             $idmaquina = $this->input->post('id'); // anteriormente se obtenía el valor por la constante post, sin embargo se perdía el valor cuando se actualizaba la páginación.
         } else {
@@ -136,8 +133,16 @@ class audit extends CI_Controller{
         $this->load->view('templates/footer');
     }
 
-    public function procesar()
-    {
+    public function procesar() {
+
+
+        $cantidadPostulaciones =  $this->Audit_model->getCantidadCargosXCentroMesa($this->input->post('codigo_centrovotacion'), $this->input->post('mesa'));
+        $catidadRegist = 0;
+        foreach ($cantidadPostulaciones->result() as $fila){
+            $catidadRegist ++;
+            $this->form_validation->set_rules('selectvoto'.$catidadRegist, 'selectvoto'.$catidadRegist, 'required', array(
+            'required' => 'Voto NO Registrado. Debe Seleccionar una opcion de la lista '.$fila->descripcion));
+        }
         //var_dump($_POST);
         if ($this->input->post('id') != null) {
             $idmaquina = $this->input->post('id'); // anteriormente se obtenía el valor por la constante post, sin embargo se perdía el valor cuando se actualizaba la páginación.
@@ -149,30 +154,31 @@ class audit extends CI_Controller{
         $currentTemp = $currentVote->result_array();
         $current = $currentTemp[0]["MAX(cod_voto)"] + 1;
 
+        if ($this->form_validation->run() == TRUE) {
         foreach ($_POST as $clave=>$valor) {
             if ($valor !== "" && $clave != "id" && $clave != "codigo_centrovotacion" && $clave != "mesa" && $clave != "estatus") {
-                $arr1 = str_split($valor);
-             
-                if ($arr1[0] == 0) {
-                    $result =  $this->Audit_model->saveVotesAuditNull($current, null, $idmaquina, $arr1[3], 0);
+                //$arr1 = str_split($valor);
+                $arr1 = explode(',', $valor);
+                //$idOpcionBoleta = explode (',', $valor); 
+                if ($arr1[1] == 0) {
+                    $result = $this->Audit_model->saveVotesAuditNull($current, null, $idmaquina, $arr1[0], 0);
                 } else {
-                    $result =  $this->Audit_model->saveVotesAudit($current, $valor, $idmaquina, $arr1[3], 1);
+                    $result = $this->Audit_model->saveVotesAudit($current, $arr1[1], $idmaquina, $arr1[0], 1);
                 }
             }
+        }
         }
         $this->consultada();
     }
 
-    public function finishAudit()
-    {
+    public function finishAudit() {
         $centrovotacion = $this->input->post('codigo_centrovotacion');
         $mesa = $this->input->post('mesa');
         $this->MaquinaVotacion_model->updateMvEstatusAuditoria($centrovotacion, $mesa);
         $this->consultada();
     }
 
-    public function index()
-    {
+    public function index() {
         $this->load->view('templates/header');
         $this->load->view('templates/navigation');
         $this->load->view('audit/audit_consultar');

@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Registro Pruebas Sistema Integrado</title>
-        <link href="C:/xampp/htdocs/rpsi/Content/foundation/foundation.css" rel="stylesheet"/>
-        <link href="C:/xampp/htdocs/rpsi/Content/foundation/foundation.mvc.css" rel="stylesheet"/>
-        <link href="C:/xampp/htdocs/rpsi/Content/foundation/foundation-icons.css" rel="stylesheet"/>
-        <link href="C:/xampp/htdocs/rpsi/Content/xd.datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />
-        <link href="C:/xampp/htdocs/rpsi/Content/excle/excle.toast.css" rel="stylesheet"/>
-        <link href="C:/xampp/htdocs/rpsi/Content/excle/excle.autocomplete.css" rel="stylesheet" />
-        <link href="C:/xampp/htdocs/rpsi/Content/excle/excle.autocomplete.multiple.css" rel="stylesheet" />
-        <link href="C:/xampp/htdocs/rpsi/Content/Site.css" rel="stylesheet"/>
-        <!--  <script src='https://www.google.com/recaptcha/api.js'></script> -->
-    </head>
-    <body>
-        <h2 class="show-for-small-only"></h2>
+<style>
+table {
+    border: 1px solid black;
+}
+</style>
         <br>
-        <div class="container">
-            <div class="row">
-                <h3>Reporte de Pruebas de la M&aacute;quina de Votaci&oacute;n</h3>
                 <?php
                 $fila=$consulta->result();
                 $centrovotacion= $fila[0]->codigo_centrovotacion .'-'. $fila[0]->centro_votacion;
@@ -33,11 +19,8 @@
                 $operador = $user->result();
                 ?>
 
-                <img style="width: 200px;" src="C:/xampp/htdocs/rpsi/Content/Images/cne_logo.png" />
-                <img style="float: right; width: 200px;" src="C:/xampp/htdocs/rpsi/Content/Images/header-logo.png" />
-                <br>
-                <p style="text-align: right; font-size: 1.6875rem;">Fase Completada: <b><span style="color: #007095"><?php echo $fila[0]->estatus; ?></span></b></p>
-                <table id="dataTable">
+<p style="text-align: right;">Fase Completada: <b><span style="color: #007095"><?php echo $fila[0]->estatus; ?></span></b></p>
+<table border="1">
                     <thead>
                     <tr>
                         <td>Estado:</td>
@@ -70,7 +53,8 @@
                     </thead>
                 </table>
                 <br>
-                <table id="dataTable">
+<br>
+<table>
                     <thead>
                     <tr>
                         <td colspan="3">Detalle de los errores encontrados en la fase de pruebas:</td>
@@ -93,7 +77,8 @@
                             </tr>
                             <?php
                         }
-                    } else { ?>
+        } else {
+            ?>
                         <tr>
                             <td colspan="3">N/A</td>
                         </tr>
@@ -103,7 +88,8 @@
                     </tbody>
                 </table>
                 <br>
-                <table id="dataTable">
+<br>
+<table>
                     <thead>
                     <tr>
                         <td>Medio de Transmisión:</td>
@@ -124,7 +110,8 @@
                     </tbody>
                 </table>
                 <br>
-                <table id="dataTable">
+<br>
+<table>
                     <thead>
                     <tr>
                         <td colspan="4">Fase de Votación:</td>
@@ -159,7 +146,9 @@
                     ?>
                     </tbody>
                 </table>
-                <table id="dataTable">
+<br>
+<br>
+<table>
                     <thead>
                     <tr>
                         <td>Auditoría:</td>
@@ -180,7 +169,8 @@
                     </tbody>
                 </table>
                 <br>
-                <table id="dataTable">
+<br>
+<table>
                     <thead>
                     <tr>
                         <td colspan="3">Reemplazos:</td>
@@ -211,7 +201,8 @@
                             </tr>
                             <?php
                         }
-                    } else { ?>
+        } else {
+            ?>
                         <tr>
                             <td colspan="3">N/A</td>
                         </tr>
@@ -220,7 +211,3 @@
                     ?>
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </body>
-</html>

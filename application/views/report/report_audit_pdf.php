@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Registro Pruebas Sistema Integrado</title>
-    <link href="C:/xampp/htdocs/rpsi/Content/foundation/foundation.css" rel="stylesheet"/>
-    <link href="C:/xampp/htdocs/rpsi/Content/foundation/foundation.mvc.css" rel="stylesheet"/>
-    <link href="C:/xampp/htdocs/rpsi/Content/foundation/foundation-icons.css" rel="stylesheet"/>
-    <link href="C:/xampp/htdocs/rpsi/Content/xd.datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />
-    <link href="C:/xampp/htdocs/rpsi/Content/excle/excle.toast.css" rel="stylesheet"/>
-    <link href="C:/xampp/htdocs/rpsi/Content/excle/excle.autocomplete.css" rel="stylesheet" />
-    <link href="C:/xampp/htdocs/rpsi/Content/excle/excle.autocomplete.multiple.css" rel="stylesheet" />
-    <link href="C:/xampp/htdocs/rpsi/Content/Site.css" rel="stylesheet"/>
-    <!--  <script src='https://www.google.com/recaptcha/api.js'></script> -->
-</head>
-<body>
-<h2 class="show-for-small-only"></h2>
-<br>
-<div class="container">
-    <div class="row">
-        <h3>Reporte de Auditoría de M&aacute;quina de Votaci&oacute;n</h3>
+
+<style>
+    table {
+        border: 1px solid black;
+    }
+</style>
         <?php
         $fila=$consulta->result();
         $centrovotacion= $fila[0]->codigo_centrovotacion .'-'. $fila[0]->centro_votacion;
@@ -41,11 +27,9 @@
         $operador = $user->result();
         ?>
 
-        <img style="width: 200px;" src="C:/xampp/htdocs/rpsi/Content/Images/cne_logo.png" />
-        <img style="float: right; width: 200px;" src="C:/xampp/htdocs/rpsi/Content/Images/header-logo.png" />
         <br>
-        <p style="text-align: right; font-size: 1.6875rem;">Fase Completada: <b><span style="color: #007095"><?php echo $fila[0]->estatus; ?></span></b></p>
-        <table id="dataTable">
+<p style="text-align: right;">Fase Completada: <b><span style="color: #007095"><?php echo $fila[0]->estatus; ?></span></b></p>
+<table>
             <thead>
             <tr>
                 <td>Estado:</td>
@@ -77,6 +61,7 @@
             </tr>
             </thead>
         </table>
+<br>
         <br>
         <h3>Lista de votos</h3>
         <?php
@@ -149,7 +134,3 @@
             echo "</tbody>";
             echo "</table>";
         ?>
-    </div>
-</div>
-</body>
-</html>

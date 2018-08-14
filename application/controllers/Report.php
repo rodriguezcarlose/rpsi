@@ -7,8 +7,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * @extends CI_Controller
  */
 
-class Report extends CI_Controller
-{
+class Report extends CI_Controller {
 
     /**
      * __construct function.
@@ -16,8 +15,7 @@ class Report extends CI_Controller
      * @access public
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         
         // Para impedir el acceso directo desde la URL
@@ -45,8 +43,7 @@ class Report extends CI_Controller
         $this->load->model('Audit_model');
     }
 
-    public function index()
-    {
+    public function index() {
         $data = new stdClass();
         
         $resultCountModeloEstatus = $this->MaquinaVotacion_model->getCountModeloEstatus();
@@ -65,7 +62,7 @@ class Report extends CI_Controller
         foreach ($mv->result() as $modelomv) {
             $report = array();
             $report["modelo_maquina"] = $modelomv->modelo_maquina;
-            if (count($resultCountModeloEstatus) > 0) {
+            if (!empty($resultCountModeloEstatus)) {
                 foreach ($resultCountModeloEstatus->result() as $resultCountModelo) {
                     if ($resultCountModelo->modelo_maquina == $modelomv->modelo_maquina) {
                         $report[$resultCountModelo->estatus] = $resultCountModelo->cantidad;
@@ -73,7 +70,7 @@ class Report extends CI_Controller
                 }
             }
             
-            if (count($resultCountMedioTransmision) > 0) {
+            if (!empty($resultCountMedioTransmision)) {
                 foreach ($resultCountMedioTransmision->result() as $resultCountMedio) {
                     if ($resultCountMedio->modelo_maquina == $modelomv->modelo_maquina) {
                         $report[$resultCountMedio->medio_transmision] = $resultCountMedio->cantidad;
@@ -81,7 +78,7 @@ class Report extends CI_Controller
                 }
             }
             
-            if (count($resultCountTipReemplazo) > 0) {
+            if (!empty($resultCountTipReemplazo)) {
                 foreach ($resultCountTipReemplazo->result() as $resultCountTipo) {
                     if ($resultCountTipo->modelo_maquina == $modelomv->modelo_maquina) {
                         $report[$resultCountTipo->descripcion] = $resultCountTipo->cantidad;
@@ -107,16 +104,14 @@ class Report extends CI_Controller
     }
 
     // Show index page
-    public function report_mv()
-    {
+    public function report_mv() {
         $this->load->view('templates/header');
         $this->load->view('templates/navigation');
         $this->load->view('report/search_voting_machine');
         $this->load->view('templates/footer');
     }
 
-    public function consulta_report_mv()
-    {
+    public function consulta_report_mv() {
         $data = new stdClass();
         // validaciones de formulario
         $this->form_validation->set_rules('codigo_centrovotacion', 'C&oacute;digo de centro de votaci&oacute;n', 'trim|required|xss_clean|numeric|exact_length[9]', array(
@@ -172,8 +167,7 @@ class Report extends CI_Controller
         }
     }
 
-    public function pdf_gen()
-    {
+    public function pdf_gen() {
         $centrovotacion = $this->input->post('codigo_centrovotacion');
         $mesa = $this->input->post('mesa');
 
@@ -195,6 +189,7 @@ class Report extends CI_Controller
         //load the view and saved it into $html variable
         $html=$this->load->view('report/report_pdf', $dataVotingMachine, true);
 
+        /*
         //this the the PDF filename that user will get to download
         $time = time();
         $pdfFilePath = "reporte_pruebas_mv_". $centrovotacion . "_" . $mesa . ".pdf";
@@ -207,10 +202,55 @@ class Report extends CI_Controller
 
         //download it.
         $this->m_pdf->pdf->Output($pdfFilePath, "D");
+         * 
+         */
+        //Nueva implementacion del PDF
+        $this->load->library('Pdf');
+        $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Ex-Cle');
+        $pdf->SetTitle("reporte_pruebas_mv_" . $centrovotacion . "_" . $mesa . ".pdf");
+        // $pdf->SetSubject('Tutorial TCPDF');
+        //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+// datos por defecto de cabecera, se pueden modificar en el archivo tcpdf_config_alt.php de libraries/config
+        $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, 'Reporte de Pruebas de la Máquina de Votación', PDF_HEADER_STRING, array(0, 64, 255), array(0, 64, 128));
+        //$pdf->setFooterData($tc = array(0, 64, 0), $lc = array(0, 64, 128));
+// datos por defecto de cabecera, se pueden modificar en el archivo tcpdf_config.php de libraries/config
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+// se pueden modificar en el archivo tcpdf_config.php de libraries/config
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+// se pueden modificar en el archivo tcpdf_config.php de libraries/config
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+// se pueden modificar en el archivo tcpdf_config.php de libraries/config
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+//relación utilizada para ajustar la conversión de los píxeles
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+// ---------------------------------------------------------
+// establecer el modo de fuente por defecto
+        $pdf->setFontSubsetting(true);
+// Establecer el tipo de letra
+//Si tienes que imprimir carácteres ASCII estándar, puede utilizar las fuentes básicas como
+// Helvetica para reducir el tamaño del archivo.
+        //$pdf->SetFont('freemono', '', 14, '', true);
+// Añadir una página
+// Este método tiene varias opciones, consulta la documentación para más información.
+        $pdf->AddPage();
+//fijar efecto de sombra en el texto
+        $pdf->setTextShadow(array('enabled' => true, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
+        // Imprimimos el texto con writeHTMLCell()
+        $pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
+// ---------------------------------------------------------
+// Cerrar el documento PDF y preparamos la salida
+// Este método tiene varias opciones, consulte la documentación para más información.
+        $time = time();
+        $nombre_archivo = "reporte_pruebas_mv_" . $centrovotacion . "_" . $mesa . "_". $time.".pdf";
+        $pdf->Output($nombre_archivo, 'D');
     }
 
-    public function pdf_gen_auditoria()
-    {
+    public function pdf_gen_auditoria() {
         $data = new stdClass();
 
         if ($this->input->post('id') != null) {
@@ -229,6 +269,7 @@ class Report extends CI_Controller
 
         $arr = array();
 
+        if ($consulta_cargos_votos != null) {
         foreach ($consulta_cargos_votos->result() as $item) {
             $arr = $this->Audit_model->geVotosByCargosAudit($this->input->post('id'), $item->id_cargo);
 
@@ -262,6 +303,7 @@ class Report extends CI_Controller
             //load the view and saved it into $html variable
             $html = $this->load->view('report/report_audit_pdf', $dataVotingMachine, true);
 
+                /*
             //this the the PDF filename that user will get to download
             $time = time();
             $pdfFilePath = "reporte_auditoria_mv_" . $centrovotacion . "_" . $mesa . ".pdf";
@@ -274,8 +316,54 @@ class Report extends CI_Controller
 
             //download it.
             $this->m_pdf->pdf->Output($pdfFilePath, "D");
+                 * 
+                 */
+                //Nueva implementacion del PDF
+                $this->load->library('Pdf');
+                $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
+                $pdf->SetCreator(PDF_CREATOR);
+                $pdf->SetAuthor('Ex-Cle');
+                $pdf->SetTitle("reporte_auditoria_mv_" . $centrovotacion . "_" . $mesa . ".pdf");
+                // $pdf->SetSubject('Tutorial TCPDF');
+                //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+// datos por defecto de cabecera, se pueden modificar en el archivo tcpdf_config_alt.php de libraries/config
+                $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, 'Reporte de Auditoría de Máquina de Votación', PDF_HEADER_STRING, array(0, 64, 255), array(0, 64, 128));
+                //$pdf->setFooterData($tc = array(0, 64, 0), $lc = array(0, 64, 128));
+// datos por defecto de cabecera, se pueden modificar en el archivo tcpdf_config.php de libraries/config
+                $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+                $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+// se pueden modificar en el archivo tcpdf_config.php de libraries/config
+                $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+// se pueden modificar en el archivo tcpdf_config.php de libraries/config
+                $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+                $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+// se pueden modificar en el archivo tcpdf_config.php de libraries/config
+                $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+//relación utilizada para ajustar la conversión de los píxeles
+                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+// ---------------------------------------------------------
+// establecer el modo de fuente por defecto
+                $pdf->setFontSubsetting(true);
+// Establecer el tipo de letra
+//Si tienes que imprimir carácteres ASCII estándar, puede utilizar las fuentes básicas como
+// Helvetica para reducir el tamaño del archivo.
+                //$pdf->SetFont('freemono', '', 14, '', true);
+// Añadir una página
+// Este método tiene varias opciones, consulta la documentación para más información.
+                $pdf->AddPage();
+//fijar efecto de sombra en el texto
+                $pdf->setTextShadow(array('enabled' => true, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
+                // Imprimimos el texto con writeHTMLCell()
+                $pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
+// ---------------------------------------------------------
+// Cerrar el documento PDF y preparamos la salida
+// Este método tiene varias opciones, consulte la documentación para más información.
+                 $time = time();
+                $nombre_archivo = "reporte_auditoria_mv_" . $centrovotacion . "_" . $mesa . "_". $time .".pdf";
+                $pdf->Output($nombre_archivo, 'D');
         }
-
+        }
     }
 
     public function errors_mv() {
@@ -301,7 +389,8 @@ class Report extends CI_Controller
             if(count($errores) > 0){
 
                 //Cargamos la librería de excel.
-                $this->load->library('excel'); $this->excel->setActiveSheetIndex(0);
+                $this->load->library('excel');
+                $this->excel->setActiveSheetIndex(0);
                 $this->excel->getActiveSheet()->setTitle('Errores');
 
                 //Contador de filas

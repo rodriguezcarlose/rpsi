@@ -55,6 +55,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <h3> Auditor&iacute;a</h3>
         <div class="field small-12 columns">
             <?php
+            $cantidadSelect = 0;
             if ($cargo_candidato_partido) {
                 $flag = 0;
                 foreach ($cargo_candidato_partido as $item) {
@@ -67,19 +68,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         if ($auditoria_status) {
                             echo "<select id='$item->id_opcion_boleta' name='$item->id_opcion_boleta' disabled>";
                             echo "<option selected='selected' value=''>Seleccione</option>";
-                            echo "<option value='0,$item->id_cargo'>VOTO NULL</option>";
+                            echo "<option value='$item->id_cargo,0'>VOTO NULL</option>";
                             //echo "<option value='$item->id_opcion_boleta'>$item->candidato - $item->organizacion_politica</option>";
                             //echo "</select>";
                         } else {
-                            echo "<select id='$item->id_opcion_boleta' name='$item->id_opcion_boleta'>";
+                            $cantidadSelect ++;
+                            echo "<select id='selectvoto$cantidadSelect' name='selectvoto$cantidadSelect'>";
                             echo "<option selected='selected' value=''>Seleccione</option>";
-                            echo "<option value='0, $item->id_cargo'>VOTO NULL</option>";
+                            echo "<option value='$item->id_cargo, 0'>VOTO NULL</option>";
                             //echo "<option value='$item->id_opcion_boleta'>$item->candidato - $item->organizacion_politica</option>";
                             //echo "</select>";
                         }
-                        echo "<label for='$item->id_opcion_boleta'>Candidato - Partido Político:</label>";
+                        //echo "<label for='$item->id_opcion_boleta'>Candidato - Partido Político:</label>";
                     }
-                    echo "<option value='1, $item->id_opcion_boleta'>$item->candidato - $item->organizacion_politica</option>";
+                    echo "<option value='$item->id_cargo, $item->id_opcion_boleta'>$item->candidato - $item->organizacion_politica</option>";
                 }
                 echo "</select>";
             }
