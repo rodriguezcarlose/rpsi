@@ -86,7 +86,7 @@ class User extends CI_Controller
             
             // validation not ok, send validation errors to the view
             $this->load->view('templates/header');
-            $this->load->view('templates/Navigation');
+            $this->load->view('templates/navigation');
             $this->load->view('user/login/login');
             $this->load->view('templates/footer');
         } else {

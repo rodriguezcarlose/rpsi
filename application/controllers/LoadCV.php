@@ -66,13 +66,13 @@ class LoadCV extends CI_Controller
             $params["links"] = $this->pagination->create_links();
             
             $this->load->view('templates/header');
-            $this->load->view('templates/Navigation', $this->data);
+            $this->load->view('templates/navigation', $this->data);
             $this->load->view('loadcv/loadcv', $params);
             $this->load->view('templates/footer');
         } else {
             
             $this->load->view('templates/header');
-            $this->load->view('templates/Navigation', $this->data);
+            $this->load->view('templates/navigation', $this->data);
             $this->load->view('loadcv/loadcv');
             $this->load->view('templates/footer');
         }

@@ -38,7 +38,7 @@ class Pages extends CI_Controller {
     public function  index(){
    
         $this->load->view('templates/header');
-        $this->load->view('templates/Navigation');
+        $this->load->view('templates/navigation');
         $this->load->view("home");
         $this->load->view('templates/footer');
         
@@ -48,7 +48,7 @@ class Pages extends CI_Controller {
     {
         $data['title'] = ucfirst($page); // Capitalize the first letter
         $this->load->view('templates/header', $data);
-        $this->load->view('templates/Navigation', $data);
+        $this->load->view('templates/navigation', $data);
         if ( ! file_exists(APPPATH.'views/pages/'.$page.'.php'))
         {
             // Whoops, we don't have a page for that!
