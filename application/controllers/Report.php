@@ -362,8 +362,109 @@ class Report extends CI_Controller {
                  $time = time();
                 $nombre_archivo = "reporte_auditoria_mv_" . $centrovotacion . "_" . $mesa . "_". $time .".pdf";
                 $pdf->Output($nombre_archivo, 'D');
+            }
         }
+    }
+    //Nuevo Metodo para generar el PDF de la auditoria
+    public function generarPDFAuditoria() {
+        if ($this->input->post('id') != null) {
+            $idmaquina = $this->input->post('id'); // anteriormente se obtenía el valor por la constante post, sin embargo se perdía el valor cuando se actualizaba la páginación.
+        } else {
+            $idmaquina = $this->UsuarioMaquina_model->getMaquinaIDByUser($_SESSION['id']);
         }
+        $cargos = $this->Audit_model->getCantidadCargosXCentroMesa($this->input->post('codigo_centrovotacion'), $this->input->post('mesa'));
+        $result = $this->MaquinaVotacion_model->getDetailTestVotingMachine($idmaquina);
+        $operador = $this->Contingencia_model->getEmpleado($_SESSION["id"]);
+        //Armamos la estadistica
+        $estadisticas = array();
+        foreach ($cargos->result() as $cargo) {
+            $fila = array();
+            array_push($fila, $cargo->descripcion);
+            array_push($fila, $cargo->id);
+            //consultamos los candidatos por cada cargo
+            $candidatoCargo = $this->Audit_model->getCandidatosByCentroMesaCargo($this->input->post('codigo_centrovotacion'), $this->input->post('mesa'), $cargo->id);
+            //por cada candidadto consultamos las organizaciones politicas con la cantidad de votos marcados
+            foreach ($candidatoCargo->result() as $candidatosCargos) {
+                $op = $this->Audit_model->getVotosByMaquinaCargoCandidato($idmaquina, $cargo->id, $candidatosCargos->candidato_id);
+                array_push($fila, $op);
+            }
+            array_push($estadisticas, $fila);
+        }
+        //Consultamos el total de votos por máquina
+        //Consultamos los votos registrados por cada candidato por Organizacion Politica
+        // $totalvotos = array();
+        $totalvotos = array();
+        foreach ($cargos->result() as $cargo) {
+            $TotalVotosByIdMaquinaAndIdCargo = $this->Audit_model->getTotalVotosByIdMaquinaAndIdCargo($idmaquina, $cargo->id);
+            array_push($totalvotos, $TotalVotosByIdMaquinaAndIdCargo);
+        }
+        //Consultamos los votos  validos registrados por cada candidato por Organizacion Politica
+        $totalvotosvalidos = array();
+        foreach ($cargos->result() as $cargo) {
+            $totalVotosValidosByIdMaquinaAndIdCargo = $this->Audit_model->getTotalVotosValidosByIdMaquinaAndIdCargo($idmaquina, $cargo->id);
+            array_push($totalvotosvalidos, $totalVotosValidosByIdMaquinaAndIdCargo);
+        }
+        //Consultamos los votos  nulos registrados por cada candidato por Organizacion Politica
+        $totalvotosnulos = array();
+        foreach ($cargos->result() as $cargo) {
+            $totalVotosNullByIdMaquinaAndIdCargo = $this->Audit_model->getTotalVotosNullByIdMaquinaAndIdCargo($idmaquina, $cargo->id);
+            array_push($totalvotosnulos, $totalVotosNullByIdMaquinaAndIdCargo);
+        }
+        //preparamos para enviar a la vista
+        $dataVotingMachine = array(
+            'estadisticas' => $estadisticas,
+            'consulta' => $result,
+            'totalvotos' => $totalvotos,
+            'totalvotosvalidos' => $totalvotosvalidos,
+            'totalvotosnulos' => $totalvotosnulos,
+            'user' => $operador
+        );
+       // $this->load->view('report/report_audit_pdf', $dataVotingMachine, false);
+        $html = $this->load->view('report/report_audit_pdf', $dataVotingMachine, true);
+        //Nueva implementacion del PDF
+        $this->load->library('Pdf');
+        $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Ex-Cle');
+        $pdf->SetTitle("reporte_auditoria_mv_" . $this->input->post('codigo_centrovotacion') . "_" . $this->input->post('mesa') . ".pdf");
+        // $pdf->SetSubject('Tutorial TCPDF');
+        //$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+        // datos por defecto de cabecera, se pueden modificar en el archivo tcpdf_config_alt.php de libraries/config
+        $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, 'Reporte de Auditoría de Máquina de Votación', PDF_HEADER_STRING, array(0, 64, 255), array(0, 64, 128));
+        //$pdf->setFooterData($tc = array(0, 64, 0), $lc = array(0, 64, 128));
+        // datos por defecto de cabecera, se pueden modificar en el archivo tcpdf_config.php de libraries/config
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        // se pueden modificar en el archivo tcpdf_config.php de libraries/config
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        // se pueden modificar en el archivo tcpdf_config.php de libraries/config
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        // se pueden modificar en el archivo tcpdf_config.php de libraries/config
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        //relación utilizada para ajustar la conversión de los píxeles
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        // ---------------------------------------------------------
+        // establecer el modo de fuente por defecto
+        $pdf->setFontSubsetting(true);
+        // Establecer el tipo de letra
+        //Si tienes que imprimir carácteres ASCII estándar, puede utilizar las fuentes básicas como
+        // Helvetica para reducir el tamaño del archivo.
+        //$pdf->SetFont('freemono', '', 14, '', true);
+        // Añadir una página
+        // Este método tiene varias opciones, consulta la documentación para más información.
+        $pdf->AddPage();
+        //fijar efecto de sombra en el texto
+        $pdf->setTextShadow(array('enabled' => true, 'depth_w' => 0.2, 'depth_h' => 0.2, 'color' => array(196, 196, 196), 'opacity' => 1, 'blend_mode' => 'Normal'));
+        // Imprimimos el texto con writeHTMLCell()
+        $pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
+        // ---------------------------------------------------------
+        // Cerrar el documento PDF y preparamos la salida
+        // Este método tiene varias opciones, consulte la documentación para más información.
+        $time = time();
+        $nombre_archivo = "reporte_auditoria_mv_" . $this->input->post('codigo_centrovotacion') . "_" . $this->input->post('mesa') . "_" . $time . ".pdf";
+        $pdf->Output($nombre_archivo, 'D');
     }
 
     public function errors_mv() {

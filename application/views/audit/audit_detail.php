@@ -138,8 +138,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <input id="btnEnviar" class="button small" value="Finalizar Auditor&iacute;a" type="submit"
                        onclick="this.form.action = '<?= base_url() ?>index.php/audit/finishAudit'">
             <?php } else { ?>
+            <!--input id="btnEnviar" class="button small right warning" value="Descargar Auditoria" type="submit"
+                   onclick="this.form.action = '<?= base_url() ?>index.php/report/pdf_gen_auditoria'"-->
             <input id="btnEnviar" class="button small right warning" value="Descargar Auditoria" type="submit"
-                   onclick="this.form.action = '<?= base_url() ?>index.php/report/pdf_gen_auditoria'">
+                   onclick="this.form.action = '<?= base_url() ?>index.php/report/generarPDFAuditoria'">
             <?php } ?>
             <input id="btnEnviar" class="button small right alert" value="Volver" type="submit"
                    onclick="this.form.action = '<?= base_url() ?>index.php/audit/index'">

@@ -1,6 +1,7 @@
 <style>
-table {
+table, th, td {
     border: 1px solid black;
+    border-collapse: collapse;
 }
 </style>
         <br>
@@ -20,7 +21,7 @@ table {
                 ?>
 
 <p style="text-align: right;">Fase Completada: <b><span style="color: #007095"><?php echo $fila[0]->estatus; ?></span></b></p>
-<table border="1">
+<table>
                     <thead>
                     <tr>
                         <td>Estado:</td>

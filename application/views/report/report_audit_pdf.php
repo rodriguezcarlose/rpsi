@@ -1,35 +1,26 @@
 
 <style>
-    table {
+table, th, td {
         border: 1px solid black;
+    border-collapse: collapse;
     }
 </style>
         <?php
         $fila=$consulta->result();
         $centrovotacion= $fila[0]->codigo_centrovotacion .'-'. $fila[0]->centro_votacion;
 
-        if (!is_null($consulta_votos_auditoria)) {
-            $votos_auditoria = $consulta_votos_auditoria->result();
-        }
 
-        if (!is_null($consulta_votos_totales)) {
-            $votos_auditoria_totales = $consulta_votos_totales;
-        }
 
-        if (!is_null($consulta_votos_nulos)) {
-            $votos_auditoria_nulos = $consulta_votos_nulos;
-        }
 
-        if (!is_null($consulta_votos_validos)) {
-            $votos_auditoria_validos = $consulta_votos_validos;
-        }
 
         $operador = $user->result();
         ?>
 
-        <br>
+<div class="container">
+    <div class="row">
 <p style="text-align: right;">Fase Completada: <b><span style="color: #007095"><?php echo $fila[0]->estatus; ?></span></b></p>
-<table>
+        <div class="field small-12 columns">
+            <table id="dataTable">
             <thead>
             <tr>
                 <td>Estado:</td>
@@ -61,76 +52,96 @@
             </tr>
             </thead>
         </table>
-<br>
-        <br>
-        <h3>Lista de votos</h3>
+        </div>
+
+        <?php foreach ($estadisticas as $estadistica) { ?>
+            <div class="field small-12 columns">
+                <h3>Cargo: <?= $estadistica[0]; ?></h3>
+            </div>
         <?php
-            if (isset($votos_auditoria)) {
-                $cargo = '';
-                $candidato = '';
+            for ($i = 2; $i < count($estadistica); $i++) {
+                $candidato = false;
+                ?>
+                <div class="field small-12 columns">
+                    <table id="dataTable">
+                        <?php
+                        foreach ($estadistica[$i]->result() as $candidatos) {
 
-                foreach ($votos_auditoria as $item) {
 
-                    $tmp_canditato = is_null($item->candidato) ? 'VOTO NULO' : $item->candidato;
-                    $tmp_cargo = is_null($item->cargo) ? 'VOTO NULO' : $item->cargo;
-
-                    if ($cargo != $tmp_cargo) {
-                        if ($candidato != ''){
-                            echo "</tbody>";
-                            echo "</table>";
+                            if (!$candidato) {
+                                $candidato = true;
+                                ?>
+                                <tr>
+                                    <th colspan="2">
+                                        <?= $candidatos->candidato; ?>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>ORGANIZACION POLITICA</th>
+                                    <th>NUMERO DE VOTOS</th>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                            <tr>
+                                <td><?= $candidatos->siglas; ?></td>
+                                <td><?= $candidatos->cantidad; ?></td>
+                            </tr>
+                            <?php
                         }
-                        $candidato = '';
-                        $cargo = $tmp_cargo;
-                        echo "<h4> - $tmp_cargo </h4>";
-                    }
-                    if ($candidato != $tmp_canditato) {
-                        if ($candidato != ''){
-                            echo "</tbody>";
-                            echo "</table>";
+                        ?>
+                    </table>
+                </div>
+                <?php
                         }
-                        $candidato = $tmp_canditato;
-                        echo "<table id='dataTable'>";
-                        echo "<thead>";
-                        echo "<tr>";
-                        echo "<td colspan='2' style='color: #007095'>$tmp_canditato</td>";
-                        echo "</tr>";
-                        echo "<tr>";
-                        echo "<td>ORGANIZACIÓN POLÍTICA</td>";
-                        echo "<td>NÚMERO DE VOTOS</td>";
-                        echo "</tr>";
-                        echo "</thead>";
-                        echo "<tbody>";
+            $votos = 0;
+            $validos = 0;
+            $nulos = 0;
+            foreach ($totalvotos as $total){
+                foreach ($total->result() as $result){
+                    if ($result->id_cargo == $estadistica[1]){
+                        $votos = $result->total_votos;
                     }
-                    echo "<tr>";
-                    echo "<td>$item->organizacion_politica</td>";
-                    echo "<td>$item->num_votos</td>";
-                    echo "</tr>";
                 }
-                echo "</tbody>";
-                echo "</table>";
+            }
+            foreach ($totalvotosvalidos as $total){
+                foreach ($total->result() as $result){
+                    if ($result->id_cargo == $estadistica[1]){
+                        $validos = $result->total_votos;
+                    }
+                        }
+                    }
+            
+            foreach ($totalvotosnulos as $total){
+                foreach ($total->result() as $result){
+                    if ($result->id_cargo == $estadistica[1]){
+                        $nulos = $result->total_votos;
+                    }
+                }
             }
         ?>
+            <div class="field small-12 columns">
+                <table id="dataTable">
+                    <tr>
+                        <th colspan="2">VOTOS</th>
+                    </tr>
+                    <tr>
+                        <th>TOTAL VOTOS</th>
+                        <td><?= $votos;?></td>
+                    </tr>
+                    <tr>
+                        <th>TOTAL VOTOS VALIDOS</th>
+                        <td><?= $validos;?></td>
+                    </tr>
+                    <tr>
+                        <th>TOTAL VOTOS NULOS</th>
+                        <td><?= $nulos;?></td>
+                    </tr>
 
-        <?php
-            echo "<table id='dataTable'>";
-            echo "<thead>";
-            echo "<tr>";
-            echo "<td colspan='2' style='color: #007095'>Total de Votos</td>";
-            echo "</tr>";
-            echo "</thead>";
-            echo "<tbody>";
-            echo "<tr>";
-            echo "<td>TOTAL VOTOS</td>";
-            echo "<td>$votos_auditoria_totales</td>";
-            echo "</tr>";
-            echo "<tr>";
-            echo "<td>VOTOS NULOS</td>";
-            echo "<td>$votos_auditoria_nulos</td>";
-            echo "</tr>";
-            echo "<tr>";
-            echo "<td>VOTOS VALIDOS</td>";
-            echo "<td>$votos_auditoria_validos</td>";
-            echo "</tr>";
-            echo "</tbody>";
-            echo "</table>";
+                </table>
+            </div>
+            <?php
+        }
         ?>
+    </div>
+</div>
