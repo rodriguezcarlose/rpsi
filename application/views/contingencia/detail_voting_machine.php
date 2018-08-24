@@ -22,7 +22,7 @@
             }
         ?>
 
-        <form action="http://localhost/rpsi/index.php/contingencia/liberar" method="post" onsubmit="return atleast_onecheckbox(event)" >
+        <form action= "<?= base_url()?>index.php/contingencia/liberar" method="post" onsubmit="return atleast_onecheckbox(event)" >
             <div class="large-12 medium-4 columns">
                 <label>Centro de votaci&oacute;n</label>
                 <input type="text" placeholder="" name="centrovotacion" id="centrovotacion" disabled value="<?= $centrovotacion; ?>"/>
