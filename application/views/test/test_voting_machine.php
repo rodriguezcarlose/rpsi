@@ -240,6 +240,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 PostToServer(this.value, this.checked);
             }
         </script>
+        <script type="text/javascript">
+            var base_url = "<?php echo base_url(); ?>";
+            function site_url(url) {
+                var bu = "<?php echo base_url(); ?>";
+                url = (url) ? url : "";
+                return bu + "index.php/" + url;
+            }
+        </script>
 
     </div>
 </div>

@@ -135,7 +135,7 @@ $(function () {
 
 function PostToServer(value, status) {
     $.ajax({
-        url: "http://localhost/rpsi/index.php/voting_machine/change_votes",
+        url: site_url("Voting_machine/change_votes"),
         type: "POST",
         data: {
             voto: value,

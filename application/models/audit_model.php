@@ -365,10 +365,18 @@ class Audit_model extends CI_Model {
                     }
                 }
             } 
+           // return $result;
+        } //else {
+           // return null;
+        //}
+        return $result;
+        /*if ($result->num_rows() > 0) {
             return $result;
         } else {
             return null;
         }
+         * 
+         */
     }
     //***********DEPRCAR ESTAS DOS
     public function getVotosCandidatoOrganizacionPolitica($id_maquina, $id_cargo) {
