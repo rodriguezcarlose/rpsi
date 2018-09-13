@@ -126,16 +126,18 @@ class MaquinaVotacion_model extends CI_Model
 
     public function updateMv($detalleMv)
     {
-        $this->db->trans_start();
+        $this->db->trans_begin();
         $this->db->empty_table("maquina_votacion");
         $this->db->insert_batch("maquina_votacion", $detalleMv);
         $this->db->trans_complete();
         
         if ($this->db->trans_status() === FALSE) {
+            $this->db->error();
             return false;
         } else {
             return true;
         }
+ 
     }
 
     public function updateMvEstatusAuditoria($codico_centrovotacion, $mesa)

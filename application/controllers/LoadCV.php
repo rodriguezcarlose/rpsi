@@ -105,6 +105,8 @@ class LoadCV extends CI_Controller
             $data->error = $this->upload->display_errors();
             $this->data = $data;
             log_message('error', 'LoadCV|do_upload|' . $data->error);
+            log_message('error', 'LoadCV|guardar|' . $data->error);
+            
             $this->load->view('templates/header');
             $this->load->view('templates/navigation',$data);
             $this->load->view('loadcv/loadcv',$data);
@@ -187,12 +189,12 @@ class LoadCV extends CI_Controller
             $detalle =$this->MaquinaVotacion_model->getTablepaymentsTem($_SESSION['table_temp_nom']);
             $truncateLoadTemplateData =$this->MaquinaVotacion_model->truncateLoadTemplateData();
             if ($truncateLoadTemplateData) {
-                // $this->payments_model->insertPayment($this->input->post("descripcion"),$this->input->post("id_proyecto"),$this->input->post("id_gerencia"),$_SESSION['id'],$detalle);
+                //$this->payments_model->insertPayment($this->input->post("descripcion"),$this->input->post("id_proyecto"),$this->input->post("id_gerencia"),$_SESSION['id'],$detalle);
                 $resultado =  $this->MaquinaVotacion_model->updateMv($detalle->result());
                 if ($resultado){
                     $data->success = 'Se ha Cargado con &Eacutexito el Archivo.';
                 }else{
-                    $data->error = 'Ha acorrido un error inesperado, por favor intente de nuevo.';
+                    $data->error = 'Datos Invalidos, por favor intente de nuevo.';
                 }
             } else {
                 $data->error = 'Ha acorrido un error inesperado vaciando las tablas Por favor intente de nuevo.';
