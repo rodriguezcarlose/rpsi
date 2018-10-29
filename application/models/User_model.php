@@ -173,7 +173,7 @@ class User_model extends CI_Model {
         $this->db->join('empleado e', 'e.id = u.id_empleado');
         $this->db->where('u.id',$user_id);
         return $this->db->get()->row();
-    }
+    } 
     
     public function get_user_from_documento($document) {
         

@@ -196,7 +196,7 @@ class Voting_machine extends CI_Controller {
         $usuariomaquina["id_usuario"] = $_SESSION['id'];
         $usuariomaquina["id_maquina"] = $fila[0]->id;
 
-        if ($fila[0]->id_estatus_maquina == "3") {
+        if ($fila[0]->id_estatus_maquina == "3") { 
             // init params
             $params = array();
             $limit_per_page = 10;

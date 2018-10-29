@@ -12,7 +12,7 @@ class Paging extends CI_Controller {
         // load URL helper
         $this->load->helper('url');
     }
-     
+      
     public function index() 
     {
         // load db and model

@@ -58,7 +58,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             $cantidadSelect = 0;
             if ($cargo_candidato_partido) {
                 $flag = 0;
-                foreach ($cargo_candidato_partido as $item) {
+                foreach ($cargo_candidato_partido as $item) { 
                     if ($flag != $item->id_cargo) {
                         if ($flag != 0){
                             echo "</select>";

@@ -39,7 +39,7 @@ class LoadCV extends CI_Controller
         $this->data = new stdClass();
         $this->load->model('MaquinaVotacion_model');
     }
-
+ 
     public function index()
     {
         $per_page_valid = 25;

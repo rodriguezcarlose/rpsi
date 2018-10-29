@@ -100,7 +100,7 @@ class audit extends CI_Controller{
         }
     }
     
-    public function consultada() {
+    public function consultada() { 
         if ($this->input->post('id') != null) {
             $idmaquina = $this->input->post('id'); // anteriormente se obtenía el valor por la constante post, sin embargo se perdía el valor cuando se actualizaba la páginación.
         } else {
