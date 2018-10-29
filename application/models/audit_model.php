@@ -96,7 +96,7 @@ class Audit_model extends CI_Model {
                                 voto.cod_voto,
                                 cargo.descripcion AS cargo,
                                 candidato.candidato AS candidato,
-                                organizacion_politica.organizacion_politica AS organizacion_politica
+                                organizacion_politica.siglas AS organizacion_politica
                                 FROM voto
                                 LEFT JOIN opcion_boleta ON id_opcion_boleta = opcion_boleta.id
                                 LEFT JOIN postulacion ON opcion_boleta.id_postulacion = postulacion.id
@@ -176,30 +176,31 @@ class Audit_model extends CI_Model {
                                     from opcion_boleta
                                     INNER JOIN postulacion ON opcion_boleta.id_postulacion = postulacion.id
                                     INNER JOIN cargo ON postulacion.id_cargo = cargo.id
-                                    where codigo_centrovotacion = '" . $codigo_centrovotacion . "'
-                                    and mesa = '" . $mesa . "'");
+                                    INNER JOIN centromesa_cargo ON centromesa_cargo.codigo_cargo=cargo.cod_cargo
+                                    where centromesa_cargo.codigo_centrovotacion = '". $codigo_centrovotacion . "'
+                                    and centromesa_cargo.mesa = '" . $mesa . "'");
         if ($result->num_rows() > 0) {
             return $result;
         } else {
             return null;
         }
     }
-    public function getCargoCandidatoParido($codigo_centrovotacion, $mesa) {
+    public function getCargoCandidatoPartido($codigo_centrovotacion, $mesa) {
 
-        $result=$this->db->query("SELECT
-                                    opcion_boleta.id as id_opcion_boleta,
+        $result=$this->db->query("SELECT opcion_boleta.id as id_opcion_boleta,
                                     cargo.id as id_cargo,
                                     cargo.descripcion as cargo,
                                     candidato.candidato,
-                                    organizacion_politica.organizacion_politica
+                                    organizacion_politica.siglas as organizacion_politica
                                     FROM opcion_boleta
                                     INNER JOIN postulacion ON opcion_boleta.id_postulacion=postulacion.id
                                     INNER JOIN cargo ON postulacion.id_cargo=cargo.id
+                                    INNER JOIN centromesa_cargo ON centromesa_cargo.codigo_cargo=cargo.cod_cargo
                                     INNER JOIN candidato ON postulacion.id_candidato=candidato.id
-                                    INNER JOIN organizacion_politica ON opcion_boleta.id_organizacion_politica=organizacion_politica.id
-                                    WHERE codigo_centrovotacion='" . $codigo_centrovotacion . "' AND mesa='" . $mesa . "'
-                                    ORDER BY cargo.orden_cargo ASC");
-
+                                    INNER JOIN organizacion_politica ON opcion_boleta.id_organizacion_politica=organizacion_politica.id										
+                                    WHERE centromesa_cargo.codigo_centrovotacion='" . $codigo_centrovotacion . "' and centromesa_cargo.mesa='" . $mesa ."'
+                                    ORDER BY cargo.orden_cargo ASC, opcion_boleta.orden");
+       
         if ($result->num_rows()>0) {
             return $result;
         } else {

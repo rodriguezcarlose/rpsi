@@ -68,14 +68,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         if ($auditoria_status) {
                             echo "<select id='$item->id_opcion_boleta' name='$item->id_opcion_boleta' disabled>";
                             echo "<option selected='selected' value=''>Seleccione</option>";
-                            echo "<option value='$item->id_cargo,0'>VOTO NULL</option>";
+                            echo "<option value='$item->id_cargo,0'>VOTO NULO</option>";
                             //echo "<option value='$item->id_opcion_boleta'>$item->candidato - $item->organizacion_politica</option>";
                             //echo "</select>";
                         } else {
                             $cantidadSelect ++;
                             echo "<select id='selectvoto$cantidadSelect' name='selectvoto$cantidadSelect'>";
                             echo "<option selected='selected' value=''>Seleccione</option>";
-                            echo "<option value='$item->id_cargo, 0'>VOTO NULL</option>";
+                            echo "<option value='$item->id_cargo, 0'>VOTO NULO</option>";
                             //echo "<option value='$item->id_opcion_boleta'>$item->candidato - $item->organizacion_politica</option>";
                             //echo "</select>";
                         }

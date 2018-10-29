@@ -58,7 +58,7 @@ class audit extends CI_Controller{
                     $maquina_votacion = $result->row();
                     $id_maquina = $maquina_votacion->id;
 
-                    $consulta_cargo_candidato_partido = $this->Audit_model->getCargoCandidatoParido($centrovotacion, $mesa);
+                    $consulta_cargo_candidato_partido = $this->Audit_model->getCargoCandidatoPartido($centrovotacion, $mesa);
                     $consulta_votos_auditoria = $this->Audit_model->getVotesAuditByMv($id_maquina);
 
                     $estatus_mv = $maquina_votacion->estatus;
@@ -113,7 +113,7 @@ class audit extends CI_Controller{
         $centrovotacion = $this->input->post('codigo_centrovotacion');
         $mesa = $this->input->post('mesa');
 
-        $consulta_cargo_candidato_partido = $this->Audit_model->getCargoCandidatoParido($centrovotacion, $mesa);
+        $consulta_cargo_candidato_partido = $this->Audit_model->getCargoCandidatoPartido($centrovotacion, $mesa);
         $data->consulta_cargo_candidato_partido = $consulta_cargo_candidato_partido;
 
         $consulta_votos_auditoria = $this->Audit_model->getVotesAuditByMv($this->input->post('id'));

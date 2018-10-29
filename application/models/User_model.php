@@ -129,7 +129,8 @@ class User_model extends CI_Model {
         if ($this->verify_password_hash($clave, $hash)){
             $this->db->set("meson",$meson);
             $this->db->set("fecha_hora_ultima_conexion",date('Y-m-d H:i:s'));
-            $this->db->where('id_empleado', $user_id);
+            // $this->db->where('id_empleado', $user_id);
+            $this->db->where('id', $this->get_user_id_from_username($ingreso));
             $this->db->update('usuario');
             return true;
         }else{
