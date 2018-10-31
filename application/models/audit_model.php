@@ -310,16 +310,17 @@ class Audit_model extends CI_Model {
      * consultamos los candidatos  por cargo
      */
     public function getCandidatosByCentroMesaCargo($codigo_centrovotacion, $mesa, $cargoid) {
-        $result = $this->db->query("SELECT distinct
-                                    cargo.id as id_cargo,
-                                    candidato.candidato,
-                                    candidato.id as candidato_id
-                                    FROM opcion_boleta
-                                    INNER JOIN postulacion ON opcion_boleta.id_postulacion=postulacion.id
-                                    INNER JOIN cargo ON postulacion.id_cargo=cargo.id
-                                    INNER JOIN candidato ON postulacion.id_candidato=candidato.id
-                                    WHERE codigo_centrovotacion= '" . $codigo_centrovotacion . "' AND mesa= '" . $mesa . "' and cargo.id = '" . $cargoid . "' 
-                                    ORDER BY candidato.candidato, opcion_boleta.orden ASC");
+        $result = $this->db->query("SELECT DISTINCT
+                            	    cargo.id AS id_cargo,
+                            	    candidato.candidato,
+                            	    candidato.id AS candidato_id
+                            	    FROM opcion_boleta
+                            	    INNER JOIN postulacion ON opcion_boleta.id_postulacion=postulacion.id
+                            	    INNER JOIN cargo ON postulacion.id_cargo=cargo.id
+                            	    INNER JOIN candidato ON postulacion.id_candidato=candidato.id
+                            	    INNER JOIN centromesa_cargo ON centromesa_cargo.codigo_cargo=cargo.cod_cargo
+                            	    WHERE centromesa_cargo.codigo_centrovotacion = '" . $codigo_centrovotacion . "' AND centromesa_cargo.mesa= '" . $mesa . "' AND cargo.id = '" . $cargoid . "' 
+                            	    ORDER BY candidato.candidato, opcion_boleta.orden ASC");
         if ($result->num_rows() > 0) {
             return $result;
         } else {
@@ -331,19 +332,19 @@ class Audit_model extends CI_Model {
      */
     public function getVotosByMaquinaCargoCandidato($maquina, $cargoid, $candidatoid) {
         //Consultamos las organizaciones politicas de candidato
-        $result = $this->db->query("select organizacion_politica.id as organizacion_politica_id,organizacion_politica.siglas,candidato.id as candidadto_id, postulacion.id_cargo, candidato.candidato, '0' as cantidad 
-                                    from voto 
-                                    inner join maquina_votacion on maquina_votacion.id = voto.id_maquina 
-                                    inner join opcion_boleta on opcion_boleta.codigo_centrovotacion = maquina_votacion.codigo_centrovotacion  
-                                    inner join organizacion_politica on organizacion_politica.id = opcion_boleta.id_organizacion_politica 
-                                    inner join postulacion on postulacion.id = opcion_boleta.id_postulacion 
-                                    inner join candidato on candidato.id = postulacion.id_candidato 
-                                    inner join cargo on cargo.id = postulacion.id_cargo 
-                                    where voto.id_maquina = '" . $maquina . "'
-                                    and postulacion.id_cargo = '" . $cargoid . "' 
-                                    and candidato.id = '" . $candidatoid . "'
-                                    group by organizacion_politica.siglas, organizacion_politica.organizacion_politica 
-                                    order by  opcion_boleta.orden ");
+        $result = $this->db->query("SELECT organizacion_politica.id AS organizacion_politica_id,organizacion_politica.siglas,candidato.id AS candidadto_id, postulacion.id_cargo, candidato.candidato, '0' AS cantidad 
+                                	    FROM voto 
+                                	    INNER JOIN maquina_votacion ON maquina_votacion.id = voto.id_maquina
+                                	     INNER JOIN opcion_boleta ON opcion_boleta.`id` = voto.`id_opcion_boleta`
+                                	    INNER JOIN organizacion_politica ON organizacion_politica.id = opcion_boleta.id_organizacion_politica 
+                                	    INNER JOIN postulacion ON postulacion.id = opcion_boleta.id_postulacion 
+                                	    INNER JOIN candidato ON candidato.id = postulacion.id_candidato 
+                                	    INNER JOIN cargo ON cargo.id = postulacion.id_cargo 
+                                	    WHERE voto.id_maquina = '" . $maquina . "'
+                                	    AND postulacion.id_cargo = '" . $cargoid . "' 
+                                	    AND candidato.id = '" . $candidatoid . "'
+                                	    GROUP BY organizacion_politica.siglas, organizacion_politica.organizacion_politica 
+                                	    ORDER BY  opcion_boleta.orden   ");
         if ($result->num_rows() > 0) {
             $result2 = $this->db->query("select organizacion_politica.id as organizacion_politica_id,organizacion_politica.siglas,
                                         candidato.id as candidadto_id, count(*) as cantidad
