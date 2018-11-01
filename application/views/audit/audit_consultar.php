@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <br>
 <div class="container">
     <div class="row">
-        <h3>Consulta M&aacute;quina de Votaci&oacute;n</h3>
+        <h3>Consulta M&aacute;quina de Votaci&oacute;n para Auditor&iacute;a</h3>
         <?php
         if((isset($numero_meson)) && ($numero_meson!="")){
             $mostrar_numero_meson=$numero_meson;
